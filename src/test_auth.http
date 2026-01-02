@@ -1,0 +1,41 @@
+### Test 1: Parent Signup (No Player Created)
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "parent@example.com",
+  "password": "password123",
+  "name": "Jane Doe",
+  "role": "PARENT"
+}
+
+###
+
+### Test 2: Independent Player - Minimal Info (Auto-creates basic Player)
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "player1@college.edu",
+  "password": "password123",
+  "name": "John Smith",
+  "role": "PLAYER"
+}
+
+###
+
+### Test 3: Independent Player - Full Profile (Auto-creates complete Player)
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "player2@college.edu",
+  "password": "password123",
+  "name": "Sarah Johnson",
+  "role": "PLAYER",
+  "age": 20,
+  "position": "Catcher",
+  "sport": "softball",
+  "bats": "R",
+  "throwingHand": "R"
+}
