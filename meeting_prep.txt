@@ -1,0 +1,40 @@
+- Do you want players to be linked to subscriptions?
+
+- Do you want the recovery and activation to be an add on? You say member? what consitutes a memeber? -> a sub? or what?
+
+- Need to add admin ability to edit/remove/add any service
+
+- 518 Integration - how can we streamline the tryout registration process?
+			- how can we make it so clients can manage their 518 membership on their account?
+			- Should they have the ability to sign up for next year? Commit?
+			- Moore Velocity bookings would be able to validate 518 members and always apply a discount
+			- if you have an account on the website and you arent a 518 member you can get "ads" to sign up for it with information
+				- if you are a member and one of your players is a 518 player - it will say that and then maybe that player has a profile? are stats possible?
+				 
+
+- making sure people understand the differences between 518 and Moore Velocity
+- No pressure type message telling people they dont need to be apart of 518 to be trained by Moore Velocity
+
+- house of velo is just the facility that moore velocity runs in
+
+- adjust subscriptions
+- sales
+- email marketing
+- admins with limited view
+-- Joey with master admin
+-- Employees with a limited view
+
+
+- do research on stripe and its competitors
+
+
+- integrating softball information as well
+
+- making sure people know its not tunnel rentals
+
+- Team trainings 
+
+- add Moore Velocity page thats as a parent page to lessons showing the benefits of coming to Moore Velocity such as showing the technology
+
+
+

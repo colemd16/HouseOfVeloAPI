@@ -1,0 +1,472 @@
+=== This document will go over the layout structure we want for the website by page ===
+
+
+Make sure everything has mobile and page responsiveness
+
+keep theme throughout
+
+
+
+=== Home ===
+
+--- Above hero section (1):
+
+I want a slim announcement bar that fades in and out between the different announcment the
+business owner would like to make
+
+current announcements:
+
+1. We Moved!! The HOV is now in the GBAC (Gary Bynon Athletic Center) OFF SEASON EVOLUTION 
+schedule is now LIVE
+
+2. Cant find what you are looking for? Email us (button)
+
+3. Looking for a travel club? (13u-18u) Tryout with 518 (button)
+
+4. Want to improve your game? View Services (button)
+
+--- Hero section (2):
+
+we want this hero section to be 1.5x taller than it is now with a fading in and out of different
+pictures the owner will supply me, right now we can fade in and out of different brand colors
+so we have the js in tact and just need to change the content
+
+Replace -> Elite Baseball Training | Moore Velocity & 518 Velocity Travel Baseball
+
+with -> Elite Training & Travel Baseball Organization
+
+--- Our Training Programs section (3):
+
+the layout,design, and functionality of this section is solid
+
+Lets create a modal that when the card is clicked on pops up. This modal shows additional
+information about the program - specifically the description and available booking times
+
+
+Here are the actual training Programs, descriptions, and prices associated:
+
+** Visible on card**
+
+-> MV Hitting Evolution Program - Our Patented Off-Season Training Program guaranteed 
+to get the results you need to reach your goals!
+
+** Visible on card**
+
+Description -> Small-group, high-intent training that actually moves the needle. Each Evolution block runs a fixed 8 Hitters + 4 Pitchers so you get real coaching, high reps, and zero dead time. We track your progress with HitTrax, Pocket Radar, Blast Motion, and modern constraint drills + weighted bat/ball work to safely build speed and cleaner, more repeatable mechanics. Sessions follow a clear rotating plan led by MVSP staff with Tone Setters keeping stations tight.
+
+How it works
+Book your specific skill Evolution Blocks ( “hitting” or “pitching” program daily).
+Choose a primary track (Hitting or Pitching)
+
+Want to train both skills? Choose 3x/week or Unlimited
+
+Daily schedule (15 min overlap between blocks for arm care and dynamic warmup):
+3:00–3:15 Recovery/Activation (optional sign up)
+3:15–4:30 Evolution Block 1
+4:15–5:30 Evolution Block 2
+5:15–6:30 Evolution Block 3
+
+1 Day/Week — $225 / 4 weeks
+• Train your primary track (Hitting or Pitching)
+
+2 Days/Week — $345 / 4 weeks
+• Train your primary track (Hitting or Pitching)
+
+3 Days/Week — $420 / 4 weeks
+• Can switch between hitting and pitching or focus on one.
+
+Unlimited — $525 / 4 weeks
+• Train Hitting & Pitching
+• Book multiple sessions/day when space allows
+
+All plans auto-renew every 4 weeks until you cancel.
+
+Public Drop-In (75 min): $60/session
+Recovery/Activation (3:00–3:15): $5 members / $10 public (Marc Pro + light mobility)
+
+Set the Tone at The HOV.
+
+
+**Visible on card**
+
+-> MV Pitching Evolution Program - Our Patented Off-Season Training Program guaranteed to get
+ the results you need to reach your goals!
+
+**Visible on card**
+
+Service Description
+Small-group, high-intent training that actually moves the needle. Each Evolution block runs a fixed 8 Hitters + 4 Pitchers so you get real coaching, high reps, and zero dead time. We track your progress with HitTrax, Pocket Radar, Blast Motion, and modern constraint drills + weighted bat/ball work to safely build speed and cleaner, more repeatable mechanics. Sessions follow a clear rotating plan led by MVSP staff with Tone Setters keeping stations tight.
+
+How it works
+Book your specific skill Evolution Blocks ( “hitting” or “pitching” program daily).
+Choose a primary track (Hitting or Pitching)
+
+Want to train both skills? Choose 3x/week or Unlimited
+
+Daily schedule (15 min overlap between blocks for arm care and dynamic warmup):
+3:00–3:15 Recovery/Activation (optional sign up)
+3:15–4:30 Evolution Block 1
+4:15–5:30 Evolution Block 2
+5:15–6:30 Evolution Block 3
+
+1 Day/Week — $225 / 4 weeks
+• Train your primary track (Hitting or Pitching)
+
+2 Days/Week — $345 / 4 weeks
+• Train your primary track (Hitting or Pitching)
+
+3 Days/Week — $420 / 4 weeks
+• Can switch between hitting and pitching or focus on one.
+
+Unlimited — $525 / 4 weeks
+• Train Hitting & Pitching
+• Book multiple sessions/day when space allows
+
+All plans auto-renew every 4 weeks until you cancel.
+
+Public Drop-In (75 min): $60/session
+Recovery/Activation (3:00–3:15) (add on to your session when booking)
+
+Set the Tone at The HOV.
+
+
+
+**Visible on card**
+
+MV Strength Session - The Perfect Pairing to our MV- Evolution program. Get STRONGER so your
+ new found skills can stick!
+
+**Visible on card**
+
+Service Description
+A baseball-specific strength and conditioning program designed to build explosive power, rotational strength, and overall athleticism to get you primed for the upcoming season. This program focuses on core stability, leg strength, shoulder health, and explosive movements
+ that mimic baseball actions.
+
+Duration: 1 hr
+Price: $20
+
+
+**Visible on card**
+
+College Break Group - Home for break is no time to take a break on development!
+
+**Visible on card**
+
+Service Description
+COLLEGE BREAK SESSIONS @ House of Velo
+Home from school and need a spot to keep it rolling? Jump into our College Break Sessions for hitters + pitchers who want a place to throw, pitch, hit, and lift with a competitive vibe.
+No instruction included just an open gym type deal.
+
+Duration: 2 hr
+Price: $20
+
+**Visible on card**
+
+30 min Hitting Lesson - Fast. Focused. Effective. Sharpen your swing in 30 minutes!
+
+**Visible on card**
+
+Duration: 30 min
+Price options:
+
+1:1 - $50
+1:1 Rapsodo - $60
+Group (2) - $90
+Group (3) - $120
+Group (4) - $140
+Group Same House (2) - $80
+1:1 With Pro Pitching Machine - $70 
+
+Service Description
+This 30-minute hitting session is perfect for players looking to get in quality reps and make quick, targeted adjustments. Whether you’re fine-tuning your mechanics, improving bat speed, or working on approach, this session provides focused instruction and immediate 
+feedback to help you stay sharp. Ideal for in-season tune-ups, pre-game prep, or refining key aspects of
+ your swing without the time commitment of a full lesson!
+
+**Visible on card**
+
+1 Hour Hitting Lesson - One hour to elevate your swing - Build consistency, power, and confidence
+
+**Visible on card**
+
+Duration: 1 hr
+Price options:
+
+1:1 - $80
+1:1 Rapsodo - $90
+Group (2) - $120
+Group (3) - $140
+Group (4) - $160
+Group Same House (2) - $110
+1:1 With Pro Pitching Machine - $90
+
+Service Description
+This 60-minute hitting lesson is designed to help players refine their mechanics, improve bat speed, and develop a more consistent, powerful swing. With expert instruction, focused drills, and real-time feedback, hitters will gain the tools they need to drive the ball with confidence.
+Whether you're making swing adjustments, working on approach, or fine-tuning your timing, this session provides the reps and coaching necessary to take your hitting to the next level!
+
+
+**Visible on card**
+
+30 min Pitching Lesson - 30 Minutes to Sharpen Your Edge – Tune Up, Dial In, and Throw with Purpose!
+
+**Visible on card**
+
+Duration: 30 min
+Price options:
+
+1:1 - $50
+1:1 Rapsodo - $60
+Group (2) - $90
+Group (3) - $120
+Group (4) - $140
+Group Same House (2) - $80
+
+Service Description
+This 30-minute pitching session is perfect for youth/HS players alike who need a quick tune-up on the mound. Whether you're recalibrating to the slope, fine-tuning your mechanics, or cleaning up arm action and direction, this focused session provides quality reps and expert guidance to keep you on track.
+Ideal for in-season maintenance, pre-game prep, or a mid-week check-in to stay sharp!
+
+
+
+**Visible on card**
+
+1 Hour Pitching Lesson - Train Like a Pro – Precision, Power, and Arm Care Built for Longevity!
+
+**Visible on card**
+
+Duration: 1 hr
+Price options:
+
+1:1 - $80
+1:1 Rapsodo - $90
+Group (2) - $120
+Group (3) - $140
+Group (4) - $160
+Group Same House (2) - $110
+
+Service Description
+This 60-minute pitching lesson is designed for experienced players looking to refine their mechanics, optimize velocity, and enhance command while prioritizing arm health. Each session includes a structured pre-throwing routine, cutting-edge arm care strength testing, and post-throwing recovery protocols. With expert instruction and data-driven feedback, pitchers will develop sustainable mechanics, build durability, and maximize their potential on the mound. Train smarter, throw harder, and stay healthier for the long haul!
+
+**Visible on card**
+
+1 Hour Combo Lesson (2 skills) - Work on Two Skills (pitching/hitting/catching/fielding)
+
+**Visible on card**
+
+Duration: 1 hr
+Price options:
+
+1:1 - $90
+Group (2) - $130
+Group (3) - $150
+Group (4) - $170
+Group Same House (2) - $120
+
+Service Description
+Refine your game with our comprehensive skills training at House of Velo. Whether you want to focus on hitting, fielding, pitching, or a combination, our training sessions cover all aspects of the game. Perfect for players of all levels looking for top-tier coaching and improvement.
+
+**Visible on card**
+
+90 min Combo Lesson (2 skills) - Work on Two Skills (pitching/hitting/catching/fielding)
+
+**Visible on card**
+
+Duration: 1 hr 30 min
+Price options:
+
+1:1 - $120
+Group (2) - $160
+Group (3) - $180
+Group (4) - $200
+Group Same House (2) - $150
+
+Service Description
+Refine your game with our comprehensive skills training at House of Velo. Whether you want to focus on hitting, fielding, pitching, or a combination, our training sessions cover all aspects of the game. Perfect for players of all levels looking for top-tier coaching and improvement.
+
+
+** lets only show 6 of these on the carousel to avoid rendering so many cards **
+** Obviously all of these services belong on the Lessons and training page**
+
+
+--- About section (4):
+
+This section should be an automatic carousel with the same design as the above programs one. 
+
+The only difference is they wont be cards, each section will span the width of the page
+
+1. About House of Velo
+
+Make this sound more professional but this is the jist -> House of Velo contains two pillars
+of the youth sports community in saratoga county - Moore Velocity & 518 Velocity - Founded in 
+2020 we have always set out to make a difference, teaching life through sports
+
+2. Moore Velocity
+
+same deal - Moore Velocity is a baseball training organization that specializes in player
+development 
+
+3. 518 Velocity
+
+same deal - 518 Velocity is a youth baseball program in the Saratoga county area that since its 
+founding in 2021 has only improved and put its stamp on the area both by winning games and 
+producing fine young members of society
+
+** lets have a button that brings the user to the about page where this is displayed on that page **
+
+--- Testimonials section (5):
+
+Just a nice fading in and out of kind words from their customers
+
+you can put in stock ones for now
+
+
+=== Lessons & Training ===
+
+Obviously we have all the information stated above but I want this page to be really easy to use 
+and with a cool layout
+
+the packages dont belong on this page, there should be a view packages button for each service
+
+I want it to be next to the book now button so they should be splitting the card in half together, 
+not on top of eachother
+
+Take away "Best value" or any distinction for the packages but definitely keep the difference in
+pricing and how much the customer saves, that looks really good
+
+=== Team Training Rentals ===
+
+Not your Average Cage Rental
+This is a coached team practice. A paid HOV instructor leads the plan, builds high-rep stations, and trains your staff so the same standards travel back to your field. Built for 7U–12U baseball and all-ages softball to get more out of their winter training. HitTrax data + competitions included.
+
+​
+
+Set the Tone at The HOV
+
+(Fill out our form below)
+
+Have a form submission with the fields:
+
+Name
+email
+phone
+organization name
+team age(s) level
+tell us what you are looking for! (Ideal dates & times) - > make this a long response field
+
+=== 518 Velocity Travel Baseball ===
+
+This page is basically empty on the owners current site, the only thing they have is
+
+Welcome to 518 Velocity Baseball Club 
+<button> 2026 Summer Tryout Registration <button> linked to a google form
+
+We can definitely make this way cooler and useful for the players, coaches, owner, and customers
+My initial brainstorm is kind of a central hub for all things 518 Velocity, like stats and 
+player profiles that are exportable for college coaches to view
+
+this team uses gamechanger so I dont know if there is an API for that we can use to get live 
+game data but that would be really cool
+
+would certainly drive way more traffic to the site
+
+But for now, this is just a funnel to get people to sign up for the team
+
+We could also automate the team handling process for the owner, i believe a lot of that is done 
+ manually for him -> we can handle the payments for the team, show how many payments they have
+remaining (most people pay over time) - they can also pay with check so maybe have (in the admin
+dash) a way for the owner to say yeah I got their money
+
+lets not move on this feature quiet yet but just want to get the idea on the txt
+
+=== About ===
+
+All of the information from the about carousel that was addressed above from the home page
+
+In addition to that, we want the Velo Team to be displayed, there are three currently on the
+website
+
+
+Joey Moore
+Owner and Founder of Moore Velocity & 518 Velocity Baseball Club
+
+Moore Velocity logo
+Currently the owner/head trainer of Moore Velocity Player Development, specializing in 1:1 and group training for any and all skills related to baseball and strength and conditioning.
+
+ 
+
+He’s also the General Manager and owner of 518 Velocity Baseball Club in Saratoga Springs. Prior to starting Moore Velocity, he was Playing/Coaching professionally in Western Australia.
+
+Joey graduated from Saratoga Springs where he was a three sport letter winner and Captain in basketball, baseball and football for the Blue Streaks. After SSHS he accepted a scholarship to join the Division 1 baseball program as a Right handed pitcher at UAlbany under head coach Jon Mueller. 
+
+Education:
+BS in Sociology, & Communications at SUNY Albany
+
+Certifications:
+Rapsodo Baseball Certified
+
+NYPHS Coaching Certification
+
+Driveline Hitting & Pitching Certified
+
+NASM Strength & Nutrition Certified
+
+Trained and Studied at Cressey Sports Performance
+
+
+
+
+Nolan Gaige
+Hitting Instructor – Moore Velocity Sports Performance 
+
+Head Coach for 518 Velocity 14U  
+
+Moore Velocity logo
+Nolan brings a wealth of knowledge and experience as a standout player at the high school, collegiate, and elite summer league levels.
+
+Columbia High School (2009): Set single-season records in batting average (.548), OBP (.633), home runs (11), RBIs (50), and hits (48). Named Times Union Player of the Year, Pitcher of the Year, and Hitter of the Year for Class AA. Selected as a First-Team All-State player and Northeast All-American.
+
+UAlbany (2009–2013): All-time program leader in hits, career triples, and triples in a season (9). Earned All-Rookie honors as a freshman and All-Conference recognition for three consecutive years.
+
+Elite Summer League Experience: Named Southern Collegiate League Player of the Year in 2011 after hitting .458. Played in the Cape Cod Baseball League in 2012 with future MLB stars Aaron Judge and Jeff McNeil.
+
+With his record-breaking hitting background and elite-level experience, Nolan is passionate about helping young players unlock their potential and succeed on and off the field.
+
+Education:
+Bachelors in Communications at SUNY Albany
+
+Certifications:
+Rapsodo Baseball Certified
+
+Driveline Hitting  Certified
+
+
+
+
+
+
+Christian Garcia
+Trainer/Coach/Facility Manager
+
+Moore Velocity logo
+Born and raised in Saratoga Springs, NY, a graduate of Spa Catholic in Saratoga. Christian was at the Ace Pitcher of the 2009 Spa Catholic team that won their Section 2 title and made it to the State Championship game. He went on to pitch 1 season at UAlbany before transferring to Florence-Darlington Tech where he was drafted in the 29th round of the 2012 MLB Draft by the Houston Astros.
+
+​
+
+Christian Specializes in Pitching, but is also very knowledgable in anything you need to excel at baseball!
+
+Education:
+BS in Sport Management, at Florence Darlington Tech
+
+Certifications:
+Rapsodo Baseball Certified
+
+Driveline Certified
+
+
+
+
+Also the mission statement which can go beautifully at the top of the page
+
+Our mission is simple. Make the athlete better. On & off the field.
+
+Here at Moore Velocity Sports Performance, we strive not only to create a strong physical foundation for the athlete but to build a strong mental and independent mindset that will take their game to the next level. From our elite programs and skill training to our unparalleled combined knowledge of what it takes to be elite mentally, physically, and emotionally. We pass on all of these assets to our athletes and better not only their baseball careers but their lives as well.
+
+
