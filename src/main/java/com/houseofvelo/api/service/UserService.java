@@ -7,8 +7,10 @@ import com.houseofvelo.api.exception.InvalidCredentialsException;
 import com.houseofvelo.api.exception.UserAlreadyExistsException;
 import com.houseofvelo.api.model.Player;
 import com.houseofvelo.api.model.Role;
+import com.houseofvelo.api.model.Trainer;
 import com.houseofvelo.api.model.User;
 import com.houseofvelo.api.repository.PlayerRepository;
+import com.houseofvelo.api.repository.TrainerRepository;
 import com.houseofvelo.api.repository.UserRepository;
 import com.houseofvelo.api.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class UserService {
 
     private final PlayerRepository playerRepository;
     private final UserRepository userRepository;
+    private final TrainerRepository trainerRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
@@ -59,18 +62,27 @@ public class UserService {
             playerRepository.save(player);
         }
 
-        /* Auto-create Trainer for TRAINER role
+        //Auto-create Trainer for TRAINER role
         if (request.getRole() == Role.TRAINER){
             Trainer trainer = new Trainer();
             trainer.setUser(savedUser);
             trainer.setBio(request.getBio());
-            trainer.setSport(request.getSport());
+
+            // Set sports, handle null safely
+            if (request.getSports() != null && !request.getSports().isEmpty()){
+                trainer.setSports(request.getSports());
+            }
+            // imageURL can is created later by the TRAINER so they dont need to do this at signup
 
             trainerRepository.save(trainer);
         }
-        */
+
         // Generate JWT Token
-        String token = jwtUtil.generateToken(savedUser.getEmail(), savedUser.getRole());
+        String token = jwtUtil.generateToken(
+                savedUser.getEmail(),
+                savedUser.getRole(),
+                savedUser.getId()
+        );
 
         // Return response
         return new AuthResponse(
@@ -93,7 +105,11 @@ public class UserService {
         }
 
         //Generate JWT Token
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+        String token = jwtUtil.generateToken(
+                user.getEmail(),
+                user.getRole(),
+                user.getId()
+        );
 
         // Return response
         return new AuthResponse(

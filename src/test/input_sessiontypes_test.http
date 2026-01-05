@@ -1,0 +1,943 @@
+### ==================== STEP 1: ADMIN SETUP ====================
+
+### 1. Create Admin User
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "admin@houseofvelo.com",
+  "password": "Baseball77",
+  "name": "Admin User",
+  "role": "ADMIN"
+}
+
+> {%
+    client.global.set("admin_token", response.body.token);
+%}
+
+###
+
+### ==================== SESSION TYPE 1: MV HITTING EVOLUTION ====================
+
+### 2. Create MV Hitting Evolution
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "MV Hitting Evolution Program",
+  "description": "Small-group, high-intent training that actually moves the needle. Each Evolution block runs a fixed 8 Hitters + 4 Pitchers so you get real coaching, high reps, and zero dead time. We track your progress with HitTrax, Pocket Radar, Blast Motion, and modern constraint drills + weighted bat/ball work to safely build speed and cleaner, more repeatable mechanics.",
+  "durationMinutes": 75
+}
+
+> {%
+    client.global.set("hitting_evolution_id", response.body.id);
+%}
+
+###
+
+### 3. Add Public Drop-In ($60)
+POST http://localhost:8080/api/admin/session-types/{{hitting_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Public Drop-In",
+  "description": "Single 75-minute session",
+  "price": 60.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 4. Add 1 Day/Week ($225/4 weeks)
+POST http://localhost:8080/api/admin/session-types/{{hitting_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1 Day/Week",
+  "description": "Train your primary track (Hitting)",
+  "price": 225.00,
+  "pricingType": "SUBSCRIPTION",
+  "billingPeriodDays": 28,
+  "sessionsPerWeek": 1,
+  "autoRenew": true,
+  "maxParticipants": 1
+}
+
+###
+
+### 5. Add 2 Days/Week ($345/4 weeks)
+POST http://localhost:8080/api/admin/session-types/{{hitting_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "2 Days/Week",
+  "description": "Train your primary track (Hitting)",
+  "price": 345.00,
+  "pricingType": "SUBSCRIPTION",
+  "billingPeriodDays": 28,
+  "sessionsPerWeek": 2,
+  "autoRenew": true,
+  "maxParticipants": 1
+}
+
+###
+
+### 6. Add 3 Days/Week ($420/4 weeks)
+POST http://localhost:8080/api/admin/session-types/{{hitting_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "3 Days/Week",
+  "description": "Can switch between hitting and pitching or focus on one",
+  "price": 420.00,
+  "pricingType": "SUBSCRIPTION",
+  "billingPeriodDays": 28,
+  "sessionsPerWeek": 3,
+  "autoRenew": true,
+  "maxParticipants": 1
+}
+
+###
+
+### 7. Add Unlimited ($525/4 weeks)
+POST http://localhost:8080/api/admin/session-types/{{hitting_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Unlimited",
+  "description": "Train Hitting & Pitching. Book multiple sessions/day when space allows",
+  "price": 525.00,
+  "pricingType": "SUBSCRIPTION",
+  "billingPeriodDays": 28,
+  "autoRenew": true,
+  "maxParticipants": 1
+}
+
+###
+
+### ==================== SESSION TYPE 2: MV PITCHING EVOLUTION ====================
+
+### 8. Create MV Pitching Evolution
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "MV Pitching Evolution Program",
+  "description": "Small-group, high-intent training that actually moves the needle. Each Evolution block runs a fixed 8 Hitters + 4 Pitchers so you get real coaching, high reps, and zero dead time. We track your progress with HitTrax, Pocket Radar, Blast Motion, and modern constraint drills + weighted bat/ball work to safely build speed and cleaner, more repeatable mechanics.",
+  "durationMinutes": 75
+}
+
+> {%
+    client.global.set("pitching_evolution_id", response.body.id);
+%}
+
+###
+
+### 9. Add Public Drop-In ($60)
+POST http://localhost:8080/api/admin/session-types/{{pitching_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Public Drop-In",
+  "description": "Single 75-minute session",
+  "price": 60.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 10. Add 1 Day/Week ($225/4 weeks)
+POST http://localhost:8080/api/admin/session-types/{{pitching_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1 Day/Week",
+  "description": "Train your primary track (Pitching)",
+  "price": 225.00,
+  "pricingType": "SUBSCRIPTION",
+  "billingPeriodDays": 28,
+  "sessionsPerWeek": 1,
+  "autoRenew": true,
+  "maxParticipants": 1
+}
+
+###
+
+### 11. Add 2 Days/Week ($345/4 weeks)
+POST http://localhost:8080/api/admin/session-types/{{pitching_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "2 Days/Week",
+  "description": "Train your primary track (Pitching)",
+  "price": 345.00,
+  "pricingType": "SUBSCRIPTION",
+  "billingPeriodDays": 28,
+  "sessionsPerWeek": 2,
+  "autoRenew": true,
+  "maxParticipants": 1
+}
+
+###
+
+### 12. Add 3 Days/Week ($420/4 weeks)
+POST http://localhost:8080/api/admin/session-types/{{pitching_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "3 Days/Week",
+  "description": "Can switch between hitting and pitching or focus on one",
+  "price": 420.00,
+  "pricingType": "SUBSCRIPTION",
+  "billingPeriodDays": 28,
+  "sessionsPerWeek": 3,
+  "autoRenew": true,
+  "maxParticipants": 1
+}
+
+###
+
+### 13. Add Unlimited ($525/4 weeks)
+POST http://localhost:8080/api/admin/session-types/{{pitching_evolution_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Unlimited",
+  "description": "Train Hitting & Pitching. Book multiple sessions/day when space allows",
+  "price": 525.00,
+  "pricingType": "SUBSCRIPTION",
+  "billingPeriodDays": 28,
+  "autoRenew": true,
+  "maxParticipants": 1
+}
+
+###
+
+### ==================== SESSION TYPE 3: MV STRENGTH SESSION ====================
+
+### 14. Create MV Strength Session
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "MV Strength Session",
+  "description": "A baseball-specific strength and conditioning program designed to build explosive power, rotational strength, and overall athleticism to get you primed for the upcoming season. This program focuses on core stability, leg strength, shoulder health, and explosive movements that mimic baseball actions.",
+  "durationMinutes": 60
+}
+
+> {%
+    client.global.set("strength_id", response.body.id);
+%}
+
+###
+
+### 15. Add Single Session ($20)
+POST http://localhost:8080/api/admin/session-types/{{strength_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Single Session",
+  "price": 20.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### ==================== SESSION TYPE 4: COLLEGE BREAK GROUP ====================
+
+### 16. Create College Break Group
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "College Break Group",
+  "description": "Home from school and need a spot to keep it rolling? Jump into our College Break Sessions for hitters + pitchers who want a place to throw, pitch, hit, and lift with a competitive vibe. No instruction included just an open gym type deal.",
+  "durationMinutes": 120
+}
+
+> {%
+    client.global.set("college_break_id", response.body.id);
+%}
+
+###
+
+### 17. Add Single Session ($20)
+POST http://localhost:8080/api/admin/session-types/{{college_break_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Single Session",
+  "price": 20.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### ==================== SESSION TYPE 5: 30 MIN HITTING LESSON ====================
+
+### 18. Create 30 min Hitting Lesson
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "30 min Hitting Lesson",
+  "description": "This 30-minute hitting session is perfect for players looking to get in quality reps and make quick, targeted adjustments. Whether you're fine-tuning your mechanics, improving bat speed, or working on approach, this session provides focused instruction and immediate feedback to help you stay sharp. Ideal for in-season tune-ups, pre-game prep, or refining key aspects of your swing without the time commitment of a full lesson!",
+  "durationMinutes": 30
+}
+
+> {%
+    client.global.set("hitting_30_id", response.body.id);
+%}
+
+###
+
+### 19. Add 1:1 ($50)
+POST http://localhost:8080/api/admin/session-types/{{hitting_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1",
+  "price": 50.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 20. Add 1:1 Rapsodo ($60)
+POST http://localhost:8080/api/admin/session-types/{{hitting_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1 Rapsodo",
+  "description": "Includes Rapsodo analytics",
+  "price": 60.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 21. Add Group (2) ($90)
+POST http://localhost:8080/api/admin/session-types/{{hitting_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (2)",
+  "price": 90.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### 22. Add Group (3) ($120)
+POST http://localhost:8080/api/admin/session-types/{{hitting_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (3)",
+  "price": 120.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 3
+}
+
+###
+
+### 23. Add Group (4) ($140)
+POST http://localhost:8080/api/admin/session-types/{{hitting_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (4)",
+  "price": 140.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 4
+}
+
+###
+
+### 24. Add Group Same House (2) ($80)
+POST http://localhost:8080/api/admin/session-types/{{hitting_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group Same House (2)",
+  "description": "Discounted rate for siblings",
+  "price": 80.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### 25. Add 1:1 With Pro Pitching Machine ($70)
+POST http://localhost:8080/api/admin/session-types/{{hitting_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1 With Pro Pitching Machine",
+  "price": 70.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### ==================== SESSION TYPE 6: 1 HOUR HITTING LESSON ====================
+
+### 26. Create 1 Hour Hitting Lesson
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1 Hour Hitting Lesson",
+  "description": "This 60-minute hitting lesson is designed to help players refine their mechanics, improve bat speed, and develop a more consistent, powerful swing. With expert instruction, focused drills, and real-time feedback, hitters will gain the tools they need to drive the ball with confidence. Whether you're making swing adjustments, working on approach, or fine-tuning your timing, this session provides the reps and coaching necessary to take your hitting to the next level!",
+  "durationMinutes": 60
+}
+
+> {%
+    client.global.set("hitting_60_id", response.body.id);
+%}
+
+###
+
+### 27. Add 1:1 ($80)
+POST http://localhost:8080/api/admin/session-types/{{hitting_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1",
+  "price": 80.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 28. Add 1:1 Rapsodo ($90)
+POST http://localhost:8080/api/admin/session-types/{{hitting_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1 Rapsodo",
+  "description": "Includes Rapsodo analytics",
+  "price": 90.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 29. Add Group (2) ($120)
+POST http://localhost:8080/api/admin/session-types/{{hitting_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (2)",
+  "price": 120.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### 30. Add Group (3) ($140)
+POST http://localhost:8080/api/admin/session-types/{{hitting_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (3)",
+  "price": 140.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 3
+}
+
+###
+
+### 31. Add Group (4) ($160)
+POST http://localhost:8080/api/admin/session-types/{{hitting_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (4)",
+  "price": 160.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 4
+}
+
+###
+
+### 32. Add Group Same House (2) ($110)
+POST http://localhost:8080/api/admin/session-types/{{hitting_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group Same House (2)",
+  "description": "Discounted rate for siblings",
+  "price": 110.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### 33. Add 1:1 With Pro Pitching Machine ($90)
+POST http://localhost:8080/api/admin/session-types/{{hitting_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1 With Pro Pitching Machine",
+  "price": 90.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### ==================== SESSION TYPE 7: 30 MIN PITCHING LESSON ====================
+
+### 34. Create 30 min Pitching Lesson
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "30 min Pitching Lesson",
+  "description": "30 Minutes to Sharpen Your Edge – Tune Up, Dial In, and Throw with Purpose!",
+  "durationMinutes": 30
+}
+
+> {%
+    client.global.set("pitching_30_id", response.body.id);
+%}
+
+###
+
+### 35. Add 1:1 ($50)
+POST http://localhost:8080/api/admin/session-types/{{pitching_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1",
+  "price": 50.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 36. Add 1:1 Rapsodo ($60)
+POST http://localhost:8080/api/admin/session-types/{{pitching_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1 Rapsodo",
+  "description": "Includes Rapsodo analytics",
+  "price": 60.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 37. Add Group (2) ($90)
+POST http://localhost:8080/api/admin/session-types/{{pitching_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (2)",
+  "price": 90.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### 38. Add Group (3) ($120)
+POST http://localhost:8080/api/admin/session-types/{{pitching_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (3)",
+  "price": 120.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 3
+}
+
+###
+
+### 39. Add Group (4) ($140)
+POST http://localhost:8080/api/admin/session-types/{{pitching_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (4)",
+  "price": 140.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 4
+}
+
+###
+
+### 40. Add Group Same House (2) ($80)
+POST http://localhost:8080/api/admin/session-types/{{pitching_30_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group Same House (2)",
+  "description": "Discounted rate for siblings",
+  "price": 80.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### ==================== SESSION TYPE 8: 1 HOUR PITCHING LESSON ====================
+
+### 41. Create 1 Hour Pitching Lesson
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1 Hour Pitching Lesson",
+  "description": "Dial In Your Command, Develop Your Arsenal, and Throw with Confidence.",
+  "durationMinutes": 60
+}
+
+> {%
+    client.global.set("pitching_60_id", response.body.id);
+%}
+
+###
+
+### 42. Add 1:1 ($80)
+POST http://localhost:8080/api/admin/session-types/{{pitching_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1",
+  "price": 80.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 43. Add 1:1 Rapsodo ($90)
+POST http://localhost:8080/api/admin/session-types/{{pitching_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1 Rapsodo",
+  "description": "Includes Rapsodo analytics",
+  "price": 90.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 44. Add Group (2) ($120)
+POST http://localhost:8080/api/admin/session-types/{{pitching_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (2)",
+  "price": 120.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### 45. Add Group (3) ($140)
+POST http://localhost:8080/api/admin/session-types/{{pitching_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (3)",
+  "price": 140.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 3
+}
+
+###
+
+### 46. Add Group (4) ($160)
+POST http://localhost:8080/api/admin/session-types/{{pitching_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (4)",
+  "price": 160.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 4
+}
+
+###
+
+### 47. Add Group Same House (2) ($110)
+POST http://localhost:8080/api/admin/session-types/{{pitching_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group Same House (2)",
+  "description": "Discounted rate for siblings",
+  "price": 110.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### ==================== SESSION TYPE 9: 1 HOUR SKILLS LESSON ====================
+
+### 48. Create 1 Hour Skills Lesson
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1 Hour Skills Lesson",
+  "description": "Refine your game with our comprehensive skills training at House of Velo. Whether you want to focus on hitting, fielding, pitching, or a combination, our training sessions cover all aspects of the game. Perfect for players of all levels looking for top-tier coaching and improvement.",
+  "durationMinutes": 60
+}
+
+> {%
+    client.global.set("skills_60_id", response.body.id);
+%}
+
+###
+
+### 49. Add 1:1 ($90)
+POST http://localhost:8080/api/admin/session-types/{{skills_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1",
+  "price": 90.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 50. Add Group (2) ($130)
+POST http://localhost:8080/api/admin/session-types/{{skills_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (2)",
+  "price": 130.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### 51. Add Group (3) ($150)
+POST http://localhost:8080/api/admin/session-types/{{skills_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (3)",
+  "price": 150.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 3
+}
+
+###
+
+### 52. Add Group (4) ($170)
+POST http://localhost:8080/api/admin/session-types/{{skills_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (4)",
+  "price": 170.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 4
+}
+
+###
+
+### 53. Add Group Same House (2) ($120)
+POST http://localhost:8080/api/admin/session-types/{{skills_60_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group Same House (2)",
+  "description": "Discounted rate for siblings",
+  "price": 120.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### ==================== SESSION TYPE 10: 90 MIN COMBO LESSON ====================
+
+### 54. Create 90 min Combo Lesson
+POST http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "90 min Combo Lesson (2 skills)",
+  "description": "Work on Two Skills (pitching/hitting/catching/fielding). Refine your game with our comprehensive skills training at House of Velo. Whether you want to focus on hitting, fielding, pitching, or a combination, our training sessions cover all aspects of the game. Perfect for players of all levels looking for top-tier coaching and improvement.",
+  "durationMinutes": 90
+}
+
+> {%
+    client.global.set("combo_90_id", response.body.id);
+%}
+
+###
+
+### 55. Add 1:1 ($120)
+POST http://localhost:8080/api/admin/session-types/{{combo_90_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "1:1",
+  "price": 120.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 56. Add Group (2) ($160)
+POST http://localhost:8080/api/admin/session-types/{{combo_90_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (2)",
+  "price": 160.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### 57. Add Group (3) ($180)
+POST http://localhost:8080/api/admin/session-types/{{combo_90_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (3)",
+  "price": 180.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 3
+}
+
+###
+
+### 58. Add Group (4) ($200)
+POST http://localhost:8080/api/admin/session-types/{{combo_90_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group (4)",
+  "price": 200.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 4
+}
+
+###
+
+### 59. Add Group Same House (2) ($150)
+POST http://localhost:8080/api/admin/session-types/{{combo_90_id}}/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Group Same House (2)",
+  "description": "Discounted rate for siblings",
+  "price": 150.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 2
+}
+
+###
+
+### ==================== VERIFICATION: PUBLIC ENDPOINTS ====================
+
+### 60. View All Session Types (Public)
+GET http://localhost:8080/api/session-types
+
+###
+
+### 61. View MV Hitting Evolution Details (Public)
+GET http://localhost:8080/api/session-types/{{hitting_evolution_id}}
+
+###
+
+### 62. View 30 min Hitting Options (Public)
+GET http://localhost:8080/api/session-types/{{hitting_30_id}}/options
+
+###
+
+### 63. View Admin - All Session Types
+GET http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}

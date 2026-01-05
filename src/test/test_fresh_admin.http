@@ -1,0 +1,47 @@
+### 1. Create BRAND NEW Admin (after app restart)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "freshtest@test.com",
+  "password": "Password123"
+}
+
+> {%
+    client.global.set("admin_token", response.body.token);
+%}
+
+###
+
+### 2. Immediately Test Create Option
+POST http://localhost:8080/api/admin/session-types/1/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Test Option",
+  "price": 50.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 3. Check Database
+GET http://localhost:8080/api/session-types/1/options
+```
+
+---
+
+## 🔍 Check Your Application Logs
+
+While you run step 2, look at your **Spring Boot console** (where the app is running).
+
+**Do you see:**
+```
+JWT validation error: ...
+```
+
+or
+```
+Access Denied

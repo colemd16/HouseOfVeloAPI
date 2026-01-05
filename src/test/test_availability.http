@@ -1,0 +1,12 @@
+### Should work now
+GET http://localhost:8080/api/trainers
+
+###
+
+### Should also work
+GET http://localhost:8080/api/trainers/1
+
+###
+
+### Should also work
+GET http://localhost:8080/api/trainers/1/availability

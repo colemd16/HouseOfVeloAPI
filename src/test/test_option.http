@@ -1,0 +1,65 @@
+### 1. Create Admin and Get Token
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "testadmin2@test.com",
+  "password": "Baseball7"
+}
+
+> {%
+    client.global.set("admin_token", response.body.token);
+%}
+
+###
+
+### 2. Check Session Types Exist
+GET http://localhost:8080/api/session-types
+
+###
+
+### 3. Create ONE Test Option (for session type ID 1)
+POST http://localhost:8080/api/admin/session-types/1/options
+Authorization: Bearer {{admin_token}}
+Content-Type: application/json
+
+{
+  "name": "Test Option",
+  "description": "Test",
+  "price": 50.00,
+  "pricingType": "ONE_TIME",
+  "maxParticipants": 1
+}
+
+###
+
+### 4. Check if it was created
+GET http://localhost:8080/api/session-types/1/options
+```
+
+---
+
+## 🎯 Run It Step by Step
+
+**Click the run button for EACH request in order:**
+
+1. **Step 1** → Should return 201 Created with token
+2. **Step 2** → Should return your 10 session types
+3. **Step 3** → **THIS IS THE KEY ONE** - Does it work?
+4. **Step 4** → Should show the option you just created
+
+---
+
+## 📋 What to Check After Step 3
+
+### ✅ Success Looks Like:
+```
+HTTP/1.1 201 Created
+{
+  "id": 1,
+  "sessionTypeId": 1,
+  "name": "Test Option",
+  "price": 50.00,
+  "pricingType": "ONE_TIME",
+  ...
+}

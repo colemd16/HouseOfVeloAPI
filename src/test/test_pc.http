@@ -1,0 +1,34 @@
+### 1. Login to get new token (with userId)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "parent@example.com",
+  "password": "password123"
+}
+
+> {%
+    client.global.set("auth_token", response.body.token);
+%}
+
+###
+
+### 2. Create a player (parent adds kid)
+POST http://localhost:8080/api/players
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "name": "Tommy Smith",
+  "age": 10,
+  "position": "Pitcher",
+  "sport": "baseball",
+  "bats": "R",
+  "throwingHand": "R"
+}
+
+###
+
+### 3. Get my players
+GET http://localhost:8080/api/players
+Authorization: Bearer {{auth_token}}

@@ -26,7 +26,7 @@ public class PlayerResponse {
 
     private boolean independent;
 
-    public PlayerResponse fromPlayer(Player player){
+    public static PlayerResponse fromPlayer(Player player){
         PlayerResponse response = new PlayerResponse();
         response.setId(player.getId());
         response.setName(player.getName());

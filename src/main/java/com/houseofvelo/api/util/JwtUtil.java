@@ -29,10 +29,15 @@ public class JwtUtil {
     }
 
     // Generate token for user
-    public String generateToken(String email, Role role){
+    public String generateToken(String email, Role role, Long userId){
         HashMap<String, Object> claims = new HashMap<>();
         claims.put("role", role.name()); // Convert enum to String for JWT storage
+        claims.put("userId", userId);
         return createToken(claims, email);
+    }
+
+    public Long extractUserId(String token){
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
 
     private String createToken(Map<String, Object> claims, String subject){

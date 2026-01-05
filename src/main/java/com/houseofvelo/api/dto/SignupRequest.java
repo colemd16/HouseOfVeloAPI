@@ -2,6 +2,7 @@ package com.houseofvelo.api.dto;
 
 import com.houseofvelo.api.model.Handedness;
 import com.houseofvelo.api.model.Role;
+import com.houseofvelo.api.model.Sport;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,9 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -34,7 +38,7 @@ public class SignupRequest {
     @NotNull(message = "Role is required")
     private Role role;
 
-    // Optional player fields (only for role = PLAYER)
+    // Optional PLAYER fields (only for role = PLAYER)
     private Integer age;
     private String position;
     private String sport;
@@ -42,7 +46,8 @@ public class SignupRequest {
     private Handedness throwingHand;
     private String imageUrl;
 
-    //optional trainer field
+    //optional TRAINER fields
     private String bio;
+    private Set<Sport> sports;
 
 }

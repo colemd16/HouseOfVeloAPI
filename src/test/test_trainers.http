@@ -1,0 +1,68 @@
+### 1. Baseball-only Trainer
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "baseball-coach@example.com",
+  "password": "password123",
+  "name": "Coach Mike",
+  "role": "TRAINER",
+  "bio": "Baseball hitting specialist",
+  "sports": ["BASEBALL"]
+}
+
+> {%
+    client.global.set("trainer_token", response.body.token);
+%}
+
+###
+
+### 2. Softball-only Trainer
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "softball-coach@example.com",
+  "password": "password123",
+  "name": "Coach Sarah",
+  "role": "TRAINER",
+  "bio": "Softball pitching specialist",
+  "sports": ["SOFTBALL"]
+}
+
+###
+
+### 3. Both Sports Trainer
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "both-coach@example.com",
+  "password": "password123",
+  "name": "Coach John",
+  "role": "TRAINER",
+  "bio": "Teaches both baseball and softball",
+  "sports": ["BASEBALL", "SOFTBALL"]
+}
+
+###
+
+### 4. Trainer Views Profile
+GET http://localhost:8080/api/trainers/me
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### 5. Trainer Updates Sports (Changes to both)
+PUT http://localhost:8080/api/trainers/me
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "sports": ["BASEBALL", "SOFTBALL"]
+}
+
+###
+
+### 6. Public Views All Trainers
+GET http://localhost:8080/api/trainers
