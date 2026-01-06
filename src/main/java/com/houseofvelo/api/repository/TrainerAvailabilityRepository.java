@@ -9,16 +9,21 @@ import java.time.DayOfWeek;
 import java.util.List;
 
 @Repository
-public interface AvailabilityRepository extends JpaRepository<TrainerAvailability, Long> {
+public interface TrainerAvailabilityRepository extends JpaRepository<TrainerAvailability, Long> {
 
-    // Find all availability slots for a trainer
+    // Find all availability for a trainer
     List<TrainerAvailability> findByTrainerId(Long trainerId);
 
-    // Find availability for specific trainer and day
+    // Find availability for a specific day
     List<TrainerAvailability> findByTrainerIdAndDayOfWeek(Long trainerId, DayOfWeek dayOfWeek);
 
-    // Find only active (available) slots
+    // Find available slots only
     List<TrainerAvailability> findByTrainerIdAndIsAvailableTrue(Long trainerId);
 
+    // Find available slots for a specific day
     List<TrainerAvailability> findByTrainerIdAndDayOfWeekAndIsAvailableTrue(Long trainerId, DayOfWeek dayOfWeek);
+
+    // Delete all availability for a trainer (when updating a schedule)
+    void deleteByTrainerId(Long trainerId);
+
 }

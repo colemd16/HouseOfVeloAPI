@@ -31,7 +31,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE b.trainer.id = :trainerId " +
             "AND b.status IN ('CONFIRMED', 'UNPAID') " +
             "AND b.scheduledAt < :endTime " +
-            "AND FUNCTION('TIMESTAMPADD', MINUTE, b.durationMinutes, b.scheduledAt) > :startTime")
+            "AND FUNCTION('TIMESTAMPADD', 'MINUTE', b.durationMinutes, b.scheduledAt) > :startTime")
     List<Booking> findConflictingBookings(
             @Param("trainerId") Long trainerId,
             @Param("startTime") LocalDateTime startTime,
@@ -40,4 +40,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     // Find old confirmed bookings for auto-completion
     List<Booking> findByStatusAndScheduledAtBefore(BookingStatus status, LocalDateTime before);
+
+    List<Booking> findByConflictBookings(Long trainerId, LocalDateTime scheduledAt, LocalDateTime endTime);
 }
