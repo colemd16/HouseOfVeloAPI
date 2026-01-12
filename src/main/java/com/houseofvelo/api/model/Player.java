@@ -33,13 +33,13 @@ public class Player {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private Integer age;
 
     @Column(length = 50)
     private String position;
 
-    @Column(length = 20)
+    @Column(nullable = false, length = 20)
     private String sport;
 
     @Enumerated(EnumType.STRING)

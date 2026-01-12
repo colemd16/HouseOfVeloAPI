@@ -8,9 +8,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;  // ← At the top
 
 import java.security.Security;
 import java.util.List;
@@ -23,6 +25,7 @@ public class PlayerController {
     private final PlayerService playerService;
 
     @PostMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PlayerResponse> createPlayer(@Valid @RequestBody CreatePlayerRequest request){
         Long userId = getCurrentUserId();
         PlayerResponse response = playerService.createPlayer(request, userId);
@@ -30,6 +33,7 @@ public class PlayerController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<PlayerResponse>> getMyPlayers() {
         Long userId = getCurrentUserId();
         List<PlayerResponse> players = playerService.getMyPlayers(userId);
@@ -37,6 +41,7 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PlayerResponse> getPlayerById(@PathVariable Long id){
         Long userId = getCurrentUserId();
         PlayerResponse player = playerService.getPlayerById(id, userId);
@@ -44,6 +49,7 @@ public class PlayerController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<PlayerResponse> updatePlayer(
             @PathVariable Long id,
             @Valid @RequestBody UpdatePlayerRequest request
@@ -54,6 +60,7 @@ public class PlayerController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deletePlayer(@PathVariable Long id){
         Long userId = getCurrentUserId();
         playerService.deletePlayer(id, userId);

@@ -141,7 +141,7 @@ public class BookingService {
     private void checkForConflicts(Long trainerId, LocalDateTime scheduledAt, Integer durationMinutes){
         LocalDateTime endTime = scheduledAt.plusMinutes(durationMinutes);
 
-        List<Booking> conflicts = bookingRepository.findByConflictBookings(
+        List<Booking> conflicts = bookingRepository.findConflictingBookings(
                 trainerId,
                 scheduledAt,
                 endTime
@@ -152,6 +152,14 @@ public class BookingService {
                     "This time slot is already booked. Please choose a different time"
             );
         }
+    }
+
+    // Get all bookings for a user
+    public List<BookingResponse> getUserBookings(Long userId) {
+        return bookingRepository.findByUserIdOrderByScheduledAtDesc(userId)
+                .stream()
+                .map(BookingResponse::fromBooking)
+                .collect(Collectors.toList());
     }
 
     // Get all bookings for a user

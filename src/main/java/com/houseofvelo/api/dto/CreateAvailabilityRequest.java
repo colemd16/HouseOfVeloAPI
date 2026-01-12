@@ -1,5 +1,6 @@
 package com.houseofvelo.api.dto;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +23,10 @@ public class CreateAvailabilityRequest {
 
     @NotNull(message = "End time is required")
     private LocalTime endTime;
+
+    @AssertTrue(message = "End time must be after start time")
+    public boolean isValidTimeRange() {
+        if (startTime == null || endTime == null) return true;
+        return endTime.isAfter(startTime);
+    }
 }

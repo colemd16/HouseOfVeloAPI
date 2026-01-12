@@ -21,6 +21,7 @@ public class TrainerResponse {
     private String name;
     private String bio;
     private Set<Sport> sports;
+    private Boolean isActive;
     private String imageUrl;
     private String createdAt;
     private String updatedAt;
@@ -34,6 +35,7 @@ public class TrainerResponse {
         response.setBio(trainer.getBio());
         response.setSports(trainer.getSports());
         response.setImageUrl(trainer.getImageUrl());
+        response.setIsActive(trainer.getIsActive());
         response.setCreatedAt(trainer.getCreatedAt().toString());
         response.setUpdatedAt(trainer.getUpdatedAt().toString());
         return response;

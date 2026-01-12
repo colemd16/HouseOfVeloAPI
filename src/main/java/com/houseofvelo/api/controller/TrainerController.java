@@ -1,5 +1,6 @@
 package com.houseofvelo.api.controller;
 
+import com.houseofvelo.api.dto.CreateTrainerRequest;
 import com.houseofvelo.api.dto.TrainerResponse;
 import com.houseofvelo.api.dto.UpdateTrainerRequest;
 import com.houseofvelo.api.model.Trainer;
@@ -7,7 +8,9 @@ import com.houseofvelo.api.service.TrainerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +25,7 @@ public class TrainerController {
     private final TrainerService trainerService;
 
     // Public endpoint - anyone can view all trainers
+    @GetMapping()
     public ResponseEntity<List<TrainerResponse>> getAllTrainers() {
         List<TrainerResponse> trainers = trainerService.getAllTrainers();
         return ResponseEntity.ok(trainers);
@@ -48,6 +52,14 @@ public class TrainerController {
         Long userId = getCurrentUserId();
         TrainerResponse trainer = trainerService.updateMyProfile(userId, request);
         return ResponseEntity.ok(trainer);
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('TRAINER')")
+    public ResponseEntity<TrainerResponse> createTrainer(@Valid @RequestBody CreateTrainerRequest request){
+        Long userId = getCurrentUserId();
+        TrainerResponse trainer = trainerService.createTrainer(request, userId);
+        return new ResponseEntity<>(trainer, HttpStatus.CREATED);
     }
 
     // Helper method to get current users id from JWT

@@ -1,0 +1,378 @@
+### ==================== TRAINER TESTS ====================
+### This file tests all trainer-related functionality
+### Run these tests in order for best results
+
+### 1. Create OR Login Trainer
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "coach.mike@hov.com",
+  "password": "trainer123",
+  "name": "Coach Mike Thompson",
+  "role": "TRAINER"
+}
+
+> {%
+    if (response.status === 201) {
+        client.global.set("trainer_token", response.body.token);
+        console.log("✅ Trainer created - User ID: " + response.body.userId);
+    } else if (response.status === 409) {
+        console.log("⚠️ User exists - logging in instead...");
+        // Will login in next request
+    }
+%}
+
+###
+
+### 1b. Login if Signup Failed
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "coach.mike@hov.com",
+  "password": "trainer123"
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("trainer_token", response.body.token);
+        console.log("✅ Logged in - User ID: " + response.body.userId);
+    }
+%}
+###
+
+### 2. Trainer Creates Their Profile
+POST http://localhost:8080/api/trainers
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "bio": "15 years of coaching experience specializing in hitting mechanics and pitching development. Former college baseball player with expertise in player development for ages 10-18.",
+  "sports": ["BASEBALL"],
+  "isActive": true
+}
+
+> {%
+    if (response.status === 201 && response.body && response.body.id) {
+        client.global.set("trainer_id", response.body.id);
+        console.log("✅ Trainer profile created - Trainer ID: " + response.body.id);
+    } else {
+        console.log("❌ Trainer profile creation failed with status: " + response.status);
+    }
+%}
+
+###
+
+### 3. Trainer Views Own Profile
+GET http://localhost:8080/api/trainers/me
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### 4. Trainer Updates Profile (Add softball, update bio)
+PUT http://localhost:8080/api/trainers/me
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "bio": "15+ years coaching baseball and softball. Former college player. Specialized in hitting mechanics, pitching development, and mental game coaching. Certified by NFCA.",
+  "sports": ["BASEBALL", "SOFTBALL"],
+  "isActive": true
+}
+
+###
+
+### 5. Trainer Adds Monday Availability (9am - 5pm)
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "MONDAY",
+  "startTime": "09:00",
+  "endTime": "17:00",
+  "isAvailable": true
+}
+
+> {%
+    if (response.status === 201 && response.body && response.body.id) {
+        client.global.set("availability_monday_id", response.body.id);
+        console.log("✅ Monday availability added - ID: " + response.body.id);
+    }
+%}
+
+###
+
+### 6. Trainer Adds Tuesday Availability (10am - 6pm)
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "TUESDAY",
+  "startTime": "10:00",
+  "endTime": "18:00",
+  "isAvailable": true
+}
+
+> {%
+    if (response.status === 201 && response.body && response.body.id) {
+        client.global.set("availability_tuesday_id", response.body.id);
+        console.log("✅ Tuesday availability added - ID: " + response.body.id);
+    }
+%}
+
+###
+
+### 7. Trainer Adds Wednesday Availability (Blocked/Unavailable)
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "WEDNESDAY",
+  "startTime": "09:00",
+  "endTime": "17:00",
+  "isAvailable": false
+}
+
+> {%
+    if (response.status === 201 && response.body && response.body.id) {
+        client.global.set("availability_wednesday_id", response.body.id);
+        console.log("✅ Wednesday (blocked) added - ID: " + response.body.id);
+    }
+%}
+
+###
+
+### 8. Trainer Adds Thursday Availability (12pm - 8pm)
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "THURSDAY",
+  "startTime": "12:00",
+  "endTime": "20:00",
+  "isAvailable": true
+}
+
+###
+
+### 9. Trainer Adds Friday Availability (9am - 3pm)
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "FRIDAY",
+  "startTime": "09:00",
+  "endTime": "15:00",
+  "isAvailable": true
+}
+
+###
+
+### 10. Trainer Adds Saturday Availability (8am - 2pm)
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "SATURDAY",
+  "startTime": "08:00",
+  "endTime": "14:00",
+  "isAvailable": true
+}
+
+###
+
+### 11. Trainer Views Own Complete Schedule
+GET http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### 12. Public Views Trainer's Availability (No auth needed)
+GET http://localhost:8080/api/trainers/{{trainer_id}}/availability
+
+###
+
+### 13. Public Views All Active Trainers (No auth needed)
+GET http://localhost:8080/api/trainers
+
+###
+
+### 14. Public Views Specific Trainer Profile (No auth needed)
+GET http://localhost:8080/api/trainers/{{trainer_id}}
+
+###
+
+### ==================== BOOKING TESTS (Requires Setup) ====================
+### Note: These require a parent user with bookings
+### Run test_parent.http first to create bookings
+
+### 15. Trainer Views All Their Bookings
+GET http://localhost:8080/api/trainers/me/bookings
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### 16. Trainer Views Upcoming Bookings Only
+GET http://localhost:8080/api/trainers/me/bookings/upcoming
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### 17. Trainer Marks Customer as No-Show
+# Note: Requires a booking_id from a CONFIRMED booking that's already passed
+# First create a booking via parent test, then use its ID here
+PUT http://localhost:8080/api/bookings/1/no-show
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### 18. Trainer Tries to Mark No-Show BEFORE Session Time (Should FAIL)
+# This should return 400 Bad Request
+PUT http://localhost:8080/api/bookings/1/no-show
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### ==================== AVAILABILITY MANAGEMENT ====================
+
+### 19. Trainer Updates Monday Availability (Change hours)
+PUT http://localhost:8080/api/trainers/availability/{{availability_monday_id}}
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "MONDAY",
+  "startTime": "08:00",
+  "endTime": "16:00",
+  "isAvailable": true
+}
+
+###
+
+### 20. Trainer Deletes Wednesday Availability (Remove blocked day)
+DELETE http://localhost:8080/api/trainers/me/availability/{{availability_wednesday_id}}
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### 21. Verify Wednesday Was Deleted
+GET http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### ==================== EDGE CASES & ERROR TESTING ====================
+
+### 22. Try to Create Profile When Already Exists (Should FAIL)
+POST http://localhost:8080/api/trainers
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "bio": "Duplicate profile attempt",
+  "sports": ["BASEBALL"],
+  "isActive": true
+}
+
+###
+
+### 23. Try to Add Overlapping Availability (Should FAIL if validation exists)
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "MONDAY",
+  "startTime": "14:00",
+  "endTime": "18:00",
+  "isAvailable": true
+}
+
+###
+
+### 24. Try to Add Invalid Time Range (End before Start - Should FAIL)
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "SUNDAY",
+  "startTime": "17:00",
+  "endTime": "09:00",
+  "isAvailable": true
+}
+
+###
+
+### 25. Trainer Sets Profile to Inactive (Goes offline)
+PUT http://localhost:8080/api/trainers/me
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "isActive": false
+}
+
+###
+
+### 26. Verify Trainer No Longer Appears in Public List
+GET http://localhost:8080/api/trainers
+
+###
+
+### 27. Trainer Reactivates Profile
+PUT http://localhost:8080/api/trainers/me
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "isActive": true
+}
+
+###
+
+### 28. Verify Trainer Appears in Public List Again
+GET http://localhost:8080/api/trainers
+
+###
+
+### ==================== UNAUTHORIZED ACCESS TESTS ====================
+
+### 29. Try to Access Another Trainer's Profile Management (Should FAIL)
+# First create another trainer, then try to access their data
+GET http://localhost:8080/api/trainers/999/availability/edit
+Authorization: Bearer {{trainer_token}}
+
+###
+
+### 30. Try to Mark No-Show on Another Trainer's Booking (Should FAIL)
+# Requires another trainer's booking
+PUT http://localhost:8080/api/bookings/999/no-show
+Authorization: Bearer {{trainer_token}}
+
+
+###
+
+### ==================== TEST SUMMARY ====================
+### ✅ Tests Covered:
+### - User signup and authentication
+### - Profile creation and management
+### - Availability scheduling (all days, various times)
+### - Public visibility
+### - Booking management (view, mark no-show)
+### - Profile activation/deactivation
+### - Edge cases and error scenarios
+### - Authorization checks
+###
+### 📊 Expected Results:
+### - 30+ successful operations
+### - Proper error handling for invalid requests
+### - Correct authorization enforcement
+### - Data persistence verification

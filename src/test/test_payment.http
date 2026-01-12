@@ -1,0 +1,534 @@
+### ===================================================
+### PHASE 6A: PAYMENT FLOW TEST (Updated)
+### Complete test suite with receive payment flow
+### ===================================================
+
+### ===================================================
+### PARENT SETUP
+### ===================================================
+
+### 1. Signup Parent
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "parent.payment@hov.com",
+  "password": "parent123",
+  "name": "Payment Test Parent",
+  "role": "PARENT"
+}
+
+> {%
+    if (response.status === 201) {
+        client.global.set("parent_token", response.body.token);
+        client.global.set("parent_id", response.body.userId);
+        console.log("✅ Parent created - ID: " + response.body.userId);
+    } else if (response.status === 409) {
+        console.log("⚠️ Parent exists - logging in next...");
+    }
+%}
+
+### 2. Login Parent (if signup failed)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "parent.payment@hov.com",
+  "password": "parent123"
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("parent_token", response.body.token);
+        client.global.set("parent_id", response.body.userId);
+        console.log("✅ Parent logged in - ID: " + response.body.userId);
+    }
+%}
+
+### 3. Get Parent's Existing Players
+GET http://localhost:8080/api/players
+Authorization: Bearer {{parent_token}}
+
+> {%
+    if (response.status === 200 && response.body.length > 0) {
+        client.global.set("player_id", response.body[0].id);
+        console.log("✅ Found existing player - ID: " + response.body[0].id);
+    } else {
+        console.log("⚠️ No players found - will create one...");
+    }
+%}
+
+### 4. Create Player (if none exist)
+POST http://localhost:8080/api/players
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "name": "Tommy Payment Test",
+  "age": 14,
+  "sport": "BASEBALL",
+  "position": "SHORTSTOP",
+  "handedness": "RIGHT"
+}
+
+> {%
+    if (response.status === 201) {
+        client.global.set("player_id", response.body.id);
+        console.log("✅ Player created - ID: " + response.body.id);
+    } else {
+        console.log("⚠️ Player response: " + response.status + " (may already exist)");
+    }
+%}
+
+### ===================================================
+### TRAINER SETUP
+### ===================================================
+
+### 5. Signup Trainer
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "coach.payment@hov.com",
+  "password": "trainer123",
+  "name": "Coach Payment Test",
+  "role": "TRAINER"
+}
+
+> {%
+    if (response.status === 201) {
+        client.global.set("trainer_token", response.body.token);
+        client.global.set("trainer_user_id", response.body.userId);
+        console.log("✅ Trainer created - User ID: " + response.body.userId);
+    } else if (response.status === 409) {
+        console.log("⚠️ Trainer exists - logging in next...");
+    }
+%}
+
+### 6. Login Trainer (if signup failed)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "coach.payment@hov.com",
+  "password": "trainer123"
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("trainer_token", response.body.token);
+        client.global.set("trainer_user_id", response.body.userId);
+        console.log("✅ Trainer logged in - User ID: " + response.body.userId);
+    }
+%}
+
+### 7. Check Trainer Profile (get ID)
+GET http://localhost:8080/api/trainers/me
+Authorization: Bearer {{trainer_token}}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("trainer_id", response.body.id);
+        console.log("✅ Trainer profile found - Trainer ID: " + response.body.id);
+        console.log("   Bio: " + (response.body.bio || "(empty)"));
+        console.log("   Sports: " + JSON.stringify(response.body.sports));
+    } else {
+        console.log("❌ No trainer profile found: " + response.status);
+    }
+%}
+
+### 8. Update Trainer Profile (add bio and sports)
+PUT http://localhost:8080/api/trainers/me
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "bio": "Experienced hitting and pitching coach. 10+ years coaching youth baseball.",
+  "sports": ["BASEBALL"],
+  "isActive": true
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("trainer_id", response.body.id);
+        console.log("✅ Trainer profile updated - ID: " + response.body.id);
+    } else {
+        console.log("❌ Update failed: " + response.status);
+    }
+%}
+
+### 9. Add Monday Availability
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "MONDAY",
+  "startTime": "09:00",
+  "endTime": "17:00",
+  "isAvailable": true
+}
+
+> {%
+    if (response.status === 201) {
+        console.log("✅ Monday availability added");
+    } else {
+        console.log("⚠️ Availability response: " + response.status + " (may already exist)");
+    }
+%}
+
+### 10. Add Tuesday Availability
+POST http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "dayOfWeek": "TUESDAY",
+  "startTime": "09:00",
+  "endTime": "17:00",
+  "isAvailable": true
+}
+
+> {%
+    if (response.status === 201) {
+        console.log("✅ Tuesday availability added");
+    } else {
+        console.log("⚠️ Availability response: " + response.status + " (may already exist)");
+    }
+%}
+
+### 11. Check Trainer Availability
+GET http://localhost:8080/api/trainers/me/availability
+Authorization: Bearer {{trainer_token}}
+
+> {%
+    if (response.status === 200) {
+        console.log("✅ Trainer has " + response.body.length + " availability slot(s)");
+    }
+%}
+
+### ===================================================
+### BOOKING & PAYMENT FLOW
+### ===================================================
+
+### 12. Create Booking (Monday 10am)
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "trainerId": {{trainer_id}},
+  "playerId": {{player_id}},
+  "sessionTypeOptionId": 1,
+  "scheduledAt": "2026-01-12T10:00:00",
+  "notes": "Payment test - pay in person with CASH"
+}
+
+> {%
+    if (response.status === 201) {
+        client.global.set("booking_id_1", response.body.id);
+        console.log("✅ Booking 1 created - ID: " + response.body.id);
+        console.log("   Price: $" + response.body.pricePaid);
+    } else {
+        console.log("❌ Booking failed: " + response.status);
+        console.log("   " + JSON.stringify(response.body));
+    }
+%}
+
+### 13. Process Pay-In-Person for Booking 1
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": {{booking_id_1}},
+  "payInPerson": true
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("payment_id_1", response.body.id);
+        console.log("✅ Pay-in-person created!");
+        console.log("   Payment ID: " + response.body.id);
+        console.log("   Status: " + response.body.status);
+        console.log("   Method: " + response.body.method);
+        console.log("   Amount: $" + response.body.amount);
+    } else {
+        console.log("❌ Payment failed: " + response.status);
+        console.log("   " + JSON.stringify(response.body));
+    }
+%}
+
+### 14. Verify Payment is PENDING (no method yet)
+GET http://localhost:8080/api/payments/booking/{{booking_id_1}}
+Authorization: Bearer {{parent_token}}
+
+> {%
+    if (response.status === 200) {
+        console.log("✅ Payment status check:");
+        console.log("   Status: " + response.body.status);
+        console.log("   Method: " + (response.body.method || "NOT SET (correct!)"));
+        if (response.body.status === "PENDING" && !response.body.method) {
+            console.log("   ✅ Correct: PENDING with no method set");
+        }
+    }
+%}
+
+### 15. Trainer receives CASH payment
+PUT http://localhost:8080/api/payments/{{payment_id_1}}/receive
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "method": "CASH"
+}
+
+> {%
+    if (response.status === 200) {
+        console.log("✅ Payment received!");
+        console.log("   Status: " + response.body.status);
+        console.log("   Method: " + response.body.method);
+        console.log("   Amount: $" + response.body.amount);
+        if (response.body.status === "COMPLETED" && response.body.method === "CASH") {
+            console.log("   ✅ Correct: COMPLETED with CASH method");
+        }
+    } else {
+        console.log("❌ Receive payment failed: " + response.status);
+        console.log("   " + JSON.stringify(response.body));
+    }
+%}
+
+### 16. Verify Payment is now COMPLETED
+GET http://localhost:8080/api/payments/booking/{{booking_id_1}}
+Authorization: Bearer {{parent_token}}
+
+> {%
+    if (response.status === 200) {
+        console.log("✅ Final payment status:");
+        console.log("   Status: " + response.body.status);
+        console.log("   Method: " + response.body.method);
+        console.log("   Paid At: " + response.body.paidAt);
+    }
+%}
+
+### ===================================================
+### TEST CARD IN PERSON FLOW
+### ===================================================
+
+### 17. Create Second Booking (Tuesday 2pm)
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "trainerId": {{trainer_id}},
+  "playerId": {{player_id}},
+  "sessionTypeOptionId": 1,
+  "scheduledAt": "2026-01-13T14:00:00",
+  "notes": "Payment test - pay in person with CARD"
+}
+
+> {%
+    if (response.status === 201) {
+        client.global.set("booking_id_2", response.body.id);
+        console.log("✅ Booking 2 created - ID: " + response.body.id);
+    } else {
+        console.log("❌ Booking failed: " + response.status);
+    }
+%}
+
+### 18. Process Pay-In-Person for Booking 2
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": {{booking_id_2}},
+  "payInPerson": true
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("payment_id_2", response.body.id);
+        console.log("✅ Pay-in-person created - Payment ID: " + response.body.id);
+    } else {
+        console.log("❌ Payment failed: " + response.status);
+    }
+%}
+
+### 19. Trainer receives CARD_IN_PERSON payment
+PUT http://localhost:8080/api/payments/{{payment_id_2}}/receive
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "method": "CARD_IN_PERSON"
+}
+
+> {%
+    if (response.status === 200) {
+        console.log("✅ Card payment received!");
+        console.log("   Status: " + response.body.status);
+        console.log("   Method: " + response.body.method);
+        if (response.body.status === "COMPLETED" && response.body.method === "CARD_IN_PERSON") {
+            console.log("   ✅ Correct: COMPLETED with CARD_IN_PERSON method");
+        }
+    } else {
+        console.log("❌ Receive payment failed: " + response.status);
+        console.log("   " + JSON.stringify(response.body));
+    }
+%}
+
+### ===================================================
+### EDGE CASES & VALIDATION
+### ===================================================
+
+### 20. Try duplicate payment (should fail)
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": {{booking_id_1}},
+  "payInPerson": true
+}
+
+> {%
+    if (response.status === 400 || response.status === 500) {
+        console.log("✅ Correctly rejected - booking already paid");
+    } else {
+        console.log("⚠️ Expected 400/500, got: " + response.status);
+    }
+%}
+
+### 21. Try receiving already completed payment (should fail)
+PUT http://localhost:8080/api/payments/{{payment_id_1}}/receive
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "method": "CASH"
+}
+
+> {%
+    if (response.status === 400 || response.status === 500) {
+        console.log("✅ Correctly rejected - payment already completed");
+    } else {
+        console.log("⚠️ Expected 400/500, got: " + response.status);
+    }
+%}
+
+### 22. Try invalid payment method (should fail)
+# First create another booking and payment
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "trainerId": {{trainer_id}},
+  "playerId": {{player_id}},
+  "sessionTypeOptionId": 1,
+  "scheduledAt": "2026-01-14T10:00:00",
+  "notes": "Test invalid method"
+}
+
+> {%
+    if (response.status === 201) {
+        client.global.set("booking_id_3", response.body.id);
+        console.log("✅ Booking 3 created - ID: " + response.body.id);
+    }
+%}
+
+### 23. Create pay-in-person for booking 3
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": {{booking_id_3}},
+  "payInPerson": true
+}
+
+> {%
+    if (response.status === 200) {
+        client.global.set("payment_id_3", response.body.id);
+        console.log("✅ Payment 3 created - ID: " + response.body.id);
+    }
+%}
+
+### 24. Try invalid method CARD_ONLINE for in-person (should fail)
+PUT http://localhost:8080/api/payments/{{payment_id_3}}/receive
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "method": "CARD_ONLINE"
+}
+
+> {%
+    if (response.status === 400 || response.status === 500) {
+        console.log("✅ Correctly rejected - CARD_ONLINE not valid for in-person");
+    } else {
+        console.log("⚠️ Expected 400/500, got: " + response.status);
+    }
+%}
+
+### 25. Try non-existent booking (should fail 404)
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": 99999,
+  "payInPerson": true
+}
+
+> {%
+    if (response.status === 404) {
+        console.log("✅ Correctly returned 404 for non-existent booking");
+    } else {
+        console.log("⚠️ Expected 404, got: " + response.status);
+    }
+%}
+
+### ===================================================
+### FINAL SUMMARY
+### ===================================================
+
+### 26. Get All My Payments
+GET http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+
+> {%
+    if (response.status === 200) {
+        console.log("=== FINAL PAYMENT SUMMARY ===");
+        console.log("Total payments: " + response.body.length);
+        var completed = 0;
+        var pending = 0;
+        var total = 0;
+        response.body.forEach(function(p, i) {
+            if (p.status === "COMPLETED") completed++;
+            if (p.status === "PENDING") pending++;
+            total += parseFloat(p.amount);
+            console.log("   " + (i+1) + ". Booking #" + p.bookingId + " - $" + p.amount + " - " + p.status + " (" + (p.method || "TBD") + ")");
+        });
+        console.log("---");
+        console.log("   Completed: " + completed);
+        console.log("   Pending: " + pending);
+        console.log("   Total: $" + total);
+    }
+%}
+
+### 27. View All Bookings
+GET http://localhost:8080/api/bookings/me
+Authorization: Bearer {{parent_token}}
+
+> {%
+    if (response.status === 200) {
+        console.log("=== FINAL BOOKING SUMMARY ===");
+        console.log("Total bookings: " + response.body.length);
+        response.body.forEach(function(b, i) {
+            console.log("   " + (i+1) + ". ID:" + b.id + " - " + b.scheduledAt + " - PayInPerson: " + b.payInPerson);
+        });
+    }
+%}

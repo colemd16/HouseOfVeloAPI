@@ -1,0 +1,145 @@
+### ==================== PARENT/CUSTOMER TESTS ====================
+
+### 1. Create Parent User
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "parent@test.com",
+  "password": "parent123",
+  "name": "parentemail",
+  "role": "PARENT"
+}
+
+> {%
+    client.global.set("parent_token", response.body.token);
+    client.global.set("parent_user_id", response.body.userId);
+%}
+
+###
+
+### 2. Parent Creates Player (Child)
+POST http://localhost:8080/api/players
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "name": "Tommy Smith",
+  "position": "PITCHER",
+  "age": 13,
+  "sport": "BASEBALL",
+  "bats": "R",
+  "throwingHand": "R"
+}
+
+> {%
+    if (response.status === 201 && response.body && response.body.id) {
+        client.global.set("player_id", response.body.id);
+        console.log("✅ Player created with ID: " + response.body.id);
+    } else {
+        console.log("❌ Player creation failed with status: " + response.status);
+    }
+%}
+
+###
+
+### 3. Parent Views Their Players
+GET http://localhost:8080/api/players
+Authorization: Bearer {{parent_token}}
+
+###
+
+### 4. Parent Views Specific Player
+GET http://localhost:8080/api/players/{{player_id}}
+Authorization: Bearer {{parent_token}}
+
+###
+
+### 5. Parent Updates Player
+PUT http://localhost:8080/api/players/{{player_id}}
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "name": "Tommy Smith Jr.",
+  "primaryPosition": "OUTFIELD"
+}
+
+###
+
+### 6. Parent Views Session Types (Public)
+GET http://localhost:8080/api/session-types
+
+###
+
+### 7. Parent Views Session Options
+# Assumes session_type_id=1 exists (create via admin first)
+GET http://localhost:8080/api/session-types/1/options
+
+###
+
+### 8. Parent Views Available Trainers
+GET http://localhost:8080/api/trainers
+
+###
+
+### 9. Parent Views Trainer Availability
+# Assumes trainer_id=1 exists (create via trainer first)
+GET http://localhost:8080/api/trainers/1/availability
+
+###
+
+### 10. Parent Creates Booking for Child
+# Requires: session_option_id, trainer_id from previous setup
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "sessionTypeOptionId": 1,
+  "trainerId": 1,
+  "scheduledAt": "2026-01-12T14:00:00",
+  "playerId": {{player_id}},
+  "notes": "Tommy needs help with his swing mechanics"
+}
+
+> {%
+    client.global.set("booking_id", response.body.id);
+%}
+
+###
+
+### 11. Parent Views All Their Bookings
+GET http://localhost:8080/api/bookings/me
+Authorization: Bearer {{parent_token}}
+
+###
+
+### 12. Parent Views Upcoming Bookings Only
+GET http://localhost:8080/api/bookings/me/upcoming
+Authorization: Bearer {{parent_token}}
+
+###
+
+### 13. Parent Views Specific Booking
+GET http://localhost:8080/api/bookings/{{booking_id}}
+Authorization: Bearer {{parent_token}}
+
+###
+
+### 14. Parent Cancels Booking (with reason)
+PUT http://localhost:8080/api/bookings/{{booking_id}}/cancel
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "reason": "Schedule conflict - need to reschedule"
+}
+
+###
+
+### 15. Parent Tries to Cancel Already Cancelled Booking (Should FAIL)
+PUT http://localhost:8080/api/bookings/{{booking_id}}/cancel
+Authorization: Bearer {{parent_token}}
+
+###

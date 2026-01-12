@@ -56,6 +56,15 @@ public class Booking {
     @Column(nullable = false, length = 20)
     private BookingStatus status;
 
+    @Column(name = "pay_in_person")
+    private Boolean payInPerson;
+
+    @ManyToOne
+    private Subscription subscription;
+
+    @Column(name = "payment_deadline")
+    private LocalDateTime paymentDeadline;
+
     // Pricing (captured at booking time - price might change later)
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePaid;

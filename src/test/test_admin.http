@@ -1,0 +1,59 @@
+### ==================== ADMIN TESTS ====================
+
+### 1. Create Admin User
+POST http://localhost:8080/api/auth/signup
+Content-Type: application/json
+
+{
+  "email": "admin@hov.com",
+  "password": "admin12345",
+  "name": "Admin User",
+  "role": "ADMIN"
+}
+
+> {%
+    client.global.set("admin_token", response.body.token);
+    client.global.set("admin_user_id", response.body.userId);
+%}
+
+
+###
+
+###
+
+### 4. Admin Views All Session Types
+GET http://localhost:8080/api/admin/session-types
+Authorization: Bearer {{admin_token}}
+
+###
+
+### 5. Admin Views All Bookings
+GET http://localhost:8080/api/admin/bookings
+Authorization: Bearer {{admin_token}}
+
+###
+
+### 6. Admin Views UNPAID Bookings
+GET http://localhost:8080/api/admin/bookings?status=UNPAID
+Authorization: Bearer {{admin_token}}
+
+###
+
+### 7. Admin Updates Booking Status to CONFIRMED
+# First create a booking with parent user, then use this
+PUT http://localhost:8080/api/admin/bookings/1/status?status=CONFIRMED
+Authorization: Bearer {{admin_token}}
+
+###
+
+### 8. Admin Triggers Auto-Complete Job
+POST http://localhost:8080/api/admin/bookings/auto-complete
+Authorization: Bearer {{admin_token}}
+
+###
+
+### 9. Admin Deletes a Booking
+DELETE http://localhost:8080/api/admin/bookings/1
+Authorization: Bearer {{admin_token}}
+
+###

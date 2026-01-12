@@ -32,7 +32,6 @@ public class PlayerService {
         // Create new player
         Player player = new Player();
         player.setParent(parent);
-        player.setUser(null);
         player.setName(request.getName());
         player.setAge(request.getAge());
         player.setPosition(request.getPosition());
@@ -93,7 +92,7 @@ public class PlayerService {
             player.setName(request.getName());
         }
         if (request.getAge() != null){
-            player.setName(request.getName());
+            player.setAge(request.getAge());
         }
         if (request.getPosition() != null){
             player.setPosition(request.getPosition());

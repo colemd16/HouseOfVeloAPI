@@ -40,6 +40,9 @@ public class Trainer {
     @Column(name = "sport")
     private Set<Sport> sports = new HashSet<>();
 
+    @Column(nullable = false)
+    private Boolean isActive = false;
+
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
