@@ -1,0 +1,53 @@
+### ============================================
+### TOKEN PAYMENT TEST - VALID DATES
+### ============================================
+
+### 1. Login Parent
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "parent.payment@hov.com",
+  "password": "parent123"
+}
+
+> {% client.global.set("parent_token", response.body.token); %}
+
+### 2. Check current subscription tokens
+GET http://localhost:8080/api/subscriptions/me
+Authorization: Bearer {{parent_token}}
+
+### Note current tokensRemaining value
+
+### 3. Create new Booking (Monday Feb 2nd)
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "trainerId": 1,
+  "playerId": 1,
+  "sessionTypeOptionId": 1,
+  "scheduledAt": "2026-02-02T10:00:00",
+  "notes": "Token deduction verification"
+}
+
+> {% client.global.set("booking_id", response.body.id); %}
+
+### 4. Pay with TOKEN
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": {{booking_id}},
+  "useToken": true
+}
+
+### Expected: 200, method=TOKEN, status=COMPLETED
+
+### 5. Verify tokens decremented by 1
+GET http://localhost:8080/api/subscriptions/me
+Authorization: Bearer {{parent_token}}
+
+### Expected: tokensRemaining should be 1 less than step 2

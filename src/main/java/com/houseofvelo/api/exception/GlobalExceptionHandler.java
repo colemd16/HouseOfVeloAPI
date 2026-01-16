@@ -1,5 +1,6 @@
 package com.houseofvelo.api.exception;
 
+import com.houseofvelo.api.model.Payment;
 import com.houseofvelo.api.model.User;
 import lombok.Getter;
 import org.apache.coyote.Response;
@@ -138,6 +139,14 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentFailedException.class)
+    public ResponseEntity<Map<String, Object>> handlePaymentFailed(PaymentFailedException ex){
+        Map<String, Object> error = new HashMap<>();
+        error.put("error", ex.getErrorCode());
+        error.put("message", ex.getErrorDetail());
+        return ResponseEntity.badRequest().body(error);
     }
 
 

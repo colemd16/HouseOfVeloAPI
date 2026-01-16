@@ -1,0 +1,115 @@
+### ============================================
+### REFUND TEST - COMPLETE SETUP
+### ============================================
+
+### 1. Login Parent (already exists)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "parent.payment@hov.com",
+  "password": "parent123"
+}
+
+> {% client.global.set("parent_token", response.body.token); %}
+
+### 2. Login Trainer (already exists)
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "coach.payment@hov.com",
+  "password": "trainer123"
+}
+
+> {% client.global.set("trainer_token", response.body.token); %}
+
+### 3. Create Booking for CASH refund test
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "trainerId": 1,
+  "playerId": 1,
+  "sessionTypeOptionId": 1,
+  "scheduledAt": "2026-01-19T10:00:00",
+  "notes": "Cash payment - will refund"
+}
+
+> {% client.global.set("booking_id_cash", response.body.id); %}
+
+### 4. Create pay-in-person payment
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": {{booking_id_cash}},
+  "payInPerson": true
+}
+
+> {% client.global.set("payment_id_cash", response.body.id); %}
+
+### 5. Trainer receives CASH payment
+PUT http://localhost:8080/api/payments/{{payment_id_cash}}/receive
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "method": "CASH"
+}
+
+### 6. TEST: Refund CASH payment
+POST http://localhost:8080/api/payments/{{payment_id_cash}}/refund
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "reason": "Customer requested cancellation"
+}
+
+### Expected: 200 OK, status=REFUNDED
+
+### ============================================
+### CARD_ONLINE REFUND TEST
+### ============================================
+
+### 7. Create Booking for CARD refund test
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "trainerId": 1,
+  "playerId": 1,
+  "sessionTypeOptionId": 1,
+  "scheduledAt": "2026-01-20T14:00:00",
+  "notes": "Card payment - will refund"
+}
+
+> {% client.global.set("booking_id_card", response.body.id); %}
+
+### 8. Process CARD_ONLINE payment
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": {{booking_id_card}},
+  "sourceId": "cnon:card-nonce-ok",
+  "payInPerson": false
+}
+
+> {% client.global.set("payment_id_card", response.body.id); %}
+
+### 9. TEST: Refund CARD_ONLINE payment (calls Square API)
+POST http://localhost:8080/api/payments/{{payment_id_card}}/refund
+Authorization: Bearer {{trainer_token}}
+Content-Type: application/json
+
+{
+  "reason": "Schedule conflict - full refund"
+}
+
+### Expected: 200 OK, status=REFUNDED, squareRefundId populated

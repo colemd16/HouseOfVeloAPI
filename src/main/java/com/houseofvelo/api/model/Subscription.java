@@ -1,6 +1,7 @@
 package com.houseofvelo.api.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "subscriptions")
+@Data
 public class Subscription {
 
     @Id
@@ -27,7 +29,7 @@ public class Subscription {
     private SubscriptionStatus status; // ACTIVE, CANCELLED, PAUSED, EXPIRED
 
     private LocalDate currentPeriodStart;
-    private LocalDate getCurrentPeriodEnd;
+    private LocalDate currentPeriodEnd;
 
     private Integer tokensPerPeriod;
     private Integer tokensRemaining;

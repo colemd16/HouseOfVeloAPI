@@ -3,6 +3,7 @@ package com.houseofvelo.api.controller;
 import com.houseofvelo.api.dto.PaymentResponse;
 import com.houseofvelo.api.dto.ProcessPaymentRequest;
 import com.houseofvelo.api.dto.ReceivePaymentRequest;
+import com.houseofvelo.api.dto.RefundRequest;
 import com.houseofvelo.api.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
@@ -66,5 +67,19 @@ public class PaymentController {
         PaymentResponse response = paymentService.receivePayment(paymentId, request.getMethod(), userId);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/{paymentId}/refund")
+    @PreAuthorize("hasAnyRole('ADMIN','TRAINER')")
+    public ResponseEntity<PaymentResponse> refundPayment(
+            Authentication authentication,
+            @PathVariable Long paymentId,
+            @RequestBody RefundRequest request
+    ){
+        Long userId = (Long) authentication.getCredentials();
+        PaymentResponse response = paymentService.refundPayment(paymentId, request.getReason(), userId);
+        return ResponseEntity.ok(response);
+    }
+
+
 
 }

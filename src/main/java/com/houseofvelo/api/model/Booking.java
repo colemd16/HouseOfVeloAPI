@@ -69,10 +69,6 @@ public class Booking {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal pricePaid;
 
-    // Payment tracking
-    @Column(length = 100)
-    private String paymentIntentId;
-
     // Cancellation tracking
     private LocalDateTime cancelledAt;
 

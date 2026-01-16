@@ -1,0 +1,27 @@
+### Create another booking for declined card test
+POST http://localhost:8080/api/bookings
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "trainerId": 1,
+  "playerId": 1,
+  "sessionTypeOptionId": 1,
+  "scheduledAt": "2026-01-20T10:00:00",
+  "notes": "Declined card test"
+}
+
+> {% client.global.set("booking_id_declined", response.body.id); %}
+
+### Test DECLINED card payment
+POST http://localhost:8080/api/payments
+Authorization: Bearer {{parent_token}}
+Content-Type: application/json
+
+{
+  "bookingId": {{booking_id_declined}},
+  "sourceId": "cnon:card-nonce-declined",
+  "payInPerson": false
+}
+
+### Expected: 400 or 500 with error message about declined card

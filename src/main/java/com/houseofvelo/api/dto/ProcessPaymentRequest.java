@@ -12,4 +12,5 @@ public class ProcessPaymentRequest {
     private Long bookingId;
     private String sourceId; // Payment token from Square Web Payments SDK
     private Boolean payInPerson; // If true, skip Square payment now
+    private Boolean useToken; // Pay with subscription token
 }
