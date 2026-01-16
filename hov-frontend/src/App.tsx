@@ -9,6 +9,7 @@ import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Dashboard } from './pages/Dashboard';
 import { Players } from './pages/Players';
+import { Bookings } from './pages/Bookings';
 import { ComingSoon } from './pages/dashboards/ComingSoon';
 
 function App() {
@@ -58,17 +59,19 @@ function App() {
         }
       />
 
-      {/* Placeholder routes - Coming Soon */}
+      {/* Bookings */}
       <Route
         path="/bookings"
         element={
           <ProtectedRoute>
             <Layout>
-              <ComingSoon feature="Bookings" />
+              <Bookings />
             </Layout>
           </ProtectedRoute>
         }
       />
+
+      {/* Placeholder routes - Coming Soon */}
       <Route
         path="/payments"
         element={
