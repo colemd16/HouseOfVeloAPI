@@ -2,7 +2,8 @@ import axios from 'axios';
 import type { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import type { ApiError } from "../types";
 
-const API_BASE_URL = 'http://localhost:8080/api';
+// Use relative URL so Vite's proxy handles CORS in development
+const API_BASE_URL = '/api';
 
 const apiClient: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,

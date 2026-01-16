@@ -8,6 +8,7 @@ import { FullPageSpinner } from './components/ui/Spinner';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
 import { Dashboard } from './pages/Dashboard';
+import { Players } from './pages/Players';
 import { ComingSoon } from './pages/dashboards/ComingSoon';
 
 function App() {
@@ -45,17 +46,19 @@ function App() {
         }
       />
 
-      {/* Placeholder routes - Coming Soon */}
+      {/* Player Management */}
       <Route
         path="/players"
         element={
           <ProtectedRoute>
             <Layout>
-              <ComingSoon feature="Player Management" />
+              <Players />
             </Layout>
           </ProtectedRoute>
         }
       />
+
+      {/* Placeholder routes - Coming Soon */}
       <Route
         path="/bookings"
         element={
