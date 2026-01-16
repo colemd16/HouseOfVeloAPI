@@ -1,4 +1,4 @@
-import { Role, Handedness, Sport, DayOfWeek, PricingType, PaymentMethod } from './enums.ts';
+import { Role, Handedness, Sport, DayOfWeek, PricingType } from './enums.ts';
 
 // ============================================
 // AUTH
@@ -157,7 +157,7 @@ export interface ProcessPaymentRequest {
 }
 
 export interface ReceivePaymentRequest {
-    method: PaymentMethod.CASH | PaymentMethod.CARD_IN_PERSON;
+    method: 'CASH' | 'CARD_IN_PERSON';
 }
 
 export interface RefundRequest {
