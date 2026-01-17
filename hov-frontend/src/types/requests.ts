@@ -170,6 +170,7 @@ export interface RefundRequest {
 
 export interface CreateSubscriptionRequest {
     sessionTypeOptionId: number;
+    playerId: number; // Required - the player this subscription is for
     tokensPerPeriod: number;
     autoRenew?: boolean;
 }

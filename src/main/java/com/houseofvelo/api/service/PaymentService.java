@@ -329,10 +329,25 @@ public class PaymentService {
 
     // Helper method to process token payments
     public PaymentResponse processTokenPayment(Booking booking, Long userId){
-        // Find active subs with tokens
-        Subscription subscription = subscriptionRepository
-                .findByUserIdAndStatusAndTokensRemainingGreaterThan(userId, SubscriptionStatus.ACTIVE, 0)
-                .orElseThrow(() -> new IllegalStateException("No active subscription with available tokens"));
+        // Booking must have a player to use token payment
+        if (booking.getPlayer() == null) {
+            throw new IllegalStateException("Booking must have a player to use token payment");
+        }
+
+        // Find active subscription for this player with available tokens
+        List<Subscription> subscriptions = subscriptionRepository
+                .findByPlayerIdAndStatusAndTokensRemainingGreaterThan(
+                        booking.getPlayer().getId(),
+                        SubscriptionStatus.ACTIVE,
+                        0
+                );
+
+        if (subscriptions.isEmpty()) {
+            throw new IllegalStateException("No active subscription with available tokens for this player");
+        }
+
+        // Use the first available subscription (could be enhanced to match sessionTypeOption)
+        Subscription subscription = subscriptions.get(0);
 
         // Deduct token
         subscription.setTokensRemaining(subscription.getTokensRemaining() - 1);

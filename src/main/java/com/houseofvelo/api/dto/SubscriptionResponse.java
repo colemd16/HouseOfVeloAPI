@@ -1,5 +1,6 @@
 package com.houseofvelo.api.dto;
 
+import com.houseofvelo.api.model.SessionTypeOption;
 import com.houseofvelo.api.model.Subscription;
 import com.houseofvelo.api.model.SubscriptionStatus;
 import lombok.Builder;
@@ -13,7 +14,11 @@ import java.time.LocalDateTime;
 public class SubscriptionResponse {
     private Long id;
     private Long userId;
+    private Long playerId;
+    private String playerName;
     private Long sessionTypeOptionId;
+    private String sessionTypeName;
+    private String sessionTypeOptionName;
     private SubscriptionStatus status;
     private Integer tokensPerPeriod;
     private Integer tokensRemaining;
@@ -23,11 +28,16 @@ public class SubscriptionResponse {
     private LocalDateTime createdAt;
 
     public static SubscriptionResponse fromSubscription(Subscription subscription) {
+        SessionTypeOption option = subscription.getSessionTypeOption();
         return SubscriptionResponse.builder()
                 .id(subscription.getId())
                 .userId(subscription.getUser().getId())
-                .sessionTypeOptionId(subscription.getSessionTypeOption() != null ?
-                        subscription.getSessionTypeOption().getId() : null)
+                .playerId(subscription.getPlayer().getId())
+                .playerName(subscription.getPlayer().getName())
+                .sessionTypeOptionId(option != null ? option.getId() : null)
+                .sessionTypeName(option != null && option.getSessionType() != null ?
+                        option.getSessionType().getName() : null)
+                .sessionTypeOptionName(option != null ? option.getName() : null)
                 .status(subscription.getStatus())
                 .tokensPerPeriod(subscription.getTokensPerPeriod())
                 .tokensRemaining(subscription.getTokensRemaining())

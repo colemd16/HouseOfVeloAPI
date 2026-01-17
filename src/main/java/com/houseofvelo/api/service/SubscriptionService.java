@@ -2,10 +2,12 @@ package com.houseofvelo.api.service;
 
 import com.houseofvelo.api.dto.SubscriptionRequest;
 import com.houseofvelo.api.dto.SubscriptionResponse;
+import com.houseofvelo.api.model.Player;
 import com.houseofvelo.api.model.SessionTypeOption;
 import com.houseofvelo.api.model.Subscription;
 import com.houseofvelo.api.model.SubscriptionStatus;
 import com.houseofvelo.api.model.User;
+import com.houseofvelo.api.repository.PlayerRepository;
 import com.houseofvelo.api.repository.SessionTypeOptionRepository;
 import com.houseofvelo.api.repository.SubscriptionRepository;
 import com.houseofvelo.api.repository.UserRepository;
@@ -15,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,25 +27,44 @@ public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
+    private final PlayerRepository playerRepository;
     private final SessionTypeOptionRepository sessionTypeOptionRepository;
 
     @Transactional
-    public SubscriptionResponse createSubscription(SubscriptionRequest request, Long userId){
+    public SubscriptionResponse createSubscription(SubscriptionRequest request, Long userId) {
+        // Validate user
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
+        // Validate playerId is provided
+        if (request.getPlayerId() == null) {
+            throw new IllegalArgumentException("Player ID is required for subscriptions");
+        }
+
+        // Validate player exists and belongs to this user
+        Player player = playerRepository.findById(request.getPlayerId())
+                .orElseThrow(() -> new RuntimeException("Player not found: " + request.getPlayerId()));
+
+        if (!player.getUser().getId().equals(userId)) {
+            throw new IllegalStateException("Player does not belong to this user");
+        }
+
+        // Validate session type option
         SessionTypeOption sessionTypeOption = sessionTypeOptionRepository.findById(request.getSessionTypeOptionId())
                 .orElseThrow(() -> new RuntimeException("Session type option not found: " + request.getSessionTypeOptionId()));
 
-
-        // Check if user already has an active sub
-        subscriptionRepository.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE)
-                .ifPresent(s -> {
-                    throw new IllegalStateException("User already has an active subscription");
-                });
+        // Check if player already has an active subscription for this session type option
+        subscriptionRepository.findByPlayerIdAndSessionTypeOptionIdAndStatus(
+                request.getPlayerId(),
+                request.getSessionTypeOptionId(),
+                SubscriptionStatus.ACTIVE
+        ).ifPresent(s -> {
+            throw new IllegalStateException("Player already has an active subscription for this program");
+        });
 
         Subscription subscription = new Subscription();
         subscription.setUser(user);
+        subscription.setPlayer(player);
         subscription.setSessionTypeOption(sessionTypeOption);
         subscription.setStatus(SubscriptionStatus.ACTIVE);
         subscription.setTokensPerPeriod(request.getTokensPerPeriod());
@@ -55,22 +75,26 @@ public class SubscriptionService {
 
         Subscription savedSubscription = subscriptionRepository.save(subscription);
 
-        log.info("Subscription created for user {}. Tokens: {}", userId, savedSubscription.getTokensRemaining());
+        log.info("Subscription created for player {} (user {}). Program: {}. Tokens: {}",
+                player.getName(), userId, sessionTypeOption.getName(), savedSubscription.getTokensRemaining());
 
         return SubscriptionResponse.fromSubscription(savedSubscription);
     }
 
-    public SubscriptionResponse getMySubscription(Long userId){
-        Subscription subscription = subscriptionRepository.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE)
-                .orElseThrow(() -> new RuntimeException("No active subscription found"));
-
-        return SubscriptionResponse.fromSubscription(subscription);
-
-
+    public List<SubscriptionResponse> getMySubscriptions(Long userId) {
+        return subscriptionRepository.findByUserId(userId).stream()
+                .map(SubscriptionResponse::fromSubscription)
+                .collect(Collectors.toList());
     }
 
-    public List<SubscriptionResponse> getMySubscriptions(Long userId){
-        return subscriptionRepository.findByUserId(userId).stream()
+    public List<SubscriptionResponse> getActiveSubscriptions(Long userId) {
+        return subscriptionRepository.findByUserIdAndStatus(userId, SubscriptionStatus.ACTIVE).stream()
+                .map(SubscriptionResponse::fromSubscription)
+                .collect(Collectors.toList());
+    }
+
+    public List<SubscriptionResponse> getPlayerSubscriptions(Long playerId) {
+        return subscriptionRepository.findByPlayerId(playerId).stream()
                 .map(SubscriptionResponse::fromSubscription)
                 .collect(Collectors.toList());
     }

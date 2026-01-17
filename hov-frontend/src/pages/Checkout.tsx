@@ -5,8 +5,9 @@ import { Button } from '../components/ui/Button';
 import { Spinner } from '../components/ui/Spinner';
 import { sessionTypesApi } from '../api/sessionTypes';
 import { subscriptionsApi } from '../api/subscriptions';
+import { playersApi } from '../api/players';
 import { PricingType } from '../types/enums';
-import type { SessionTypeOptionResponse, SubscriptionResponse } from '../types';
+import type { SessionTypeOptionResponse, SubscriptionResponse, PlayerResponse } from '../types';
 
 type CheckoutStep = 'review' | 'processing' | 'success';
 
@@ -18,17 +19,44 @@ export function Checkout() {
   const [step, setStep] = useState<CheckoutStep>('review');
   const [option, setOption] = useState<SessionTypeOptionResponse | null>(null);
   const [subscription, setSubscription] = useState<SubscriptionResponse | null>(null);
+  const [players, setPlayers] = useState<PlayerResponse[]>([]);
+  const [selectedPlayer, setSelectedPlayer] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     if (optionId) {
-      fetchOptionDetails(parseInt(optionId, 10));
+      fetchInitialData(parseInt(optionId, 10));
     } else {
       setError('No subscription option selected');
       setIsLoading(false);
     }
   }, [optionId]);
+
+  const fetchInitialData = async (id: number) => {
+    try {
+      setIsLoading(true);
+
+      // Fetch players and option details in parallel
+      const [playerList] = await Promise.all([
+        playersApi.getMyPlayers(),
+      ]);
+
+      setPlayers(playerList);
+
+      // Auto-select if only one player
+      if (playerList.length === 1) {
+        setSelectedPlayer(playerList[0].id);
+      }
+
+      // Fetch option details
+      await fetchOptionDetails(id);
+    } catch (err) {
+      console.error('Failed to fetch initial data:', err);
+      setError('Failed to load checkout data');
+      setIsLoading(false);
+    }
+  };
 
   const fetchOptionDetails = async (id: number) => {
     try {
@@ -93,6 +121,11 @@ export function Checkout() {
   const handlePurchase = async () => {
     if (!option) return;
 
+    if (!selectedPlayer) {
+      setError('Please select a player for this subscription');
+      return;
+    }
+
     setStep('processing');
     setError('');
 
@@ -101,6 +134,7 @@ export function Checkout() {
 
       const response = await subscriptionsApi.create({
         sessionTypeOptionId: option.id,
+        playerId: selectedPlayer,
         tokensPerPeriod,
         autoRenew: option.autoRenew ?? true,
       });
@@ -109,10 +143,22 @@ export function Checkout() {
       setStep('success');
     } catch (err: unknown) {
       console.error('Failed to create subscription:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Failed to process subscription. Please try again.';
-      // Check for specific error about existing subscription
-      if (errorMessage.includes('already has an active subscription')) {
-        setError('You already have an active subscription. Please manage your existing subscription from your dashboard.');
+
+      // Extract error message from Axios error response
+      let errorMessage = 'Failed to process subscription. Please try again.';
+      if (err && typeof err === 'object' && 'response' in err) {
+        const axiosErr = err as { response?: { data?: string | { message?: string } } };
+        if (typeof axiosErr.response?.data === 'string') {
+          errorMessage = axiosErr.response.data;
+        } else if (axiosErr.response?.data?.message) {
+          errorMessage = axiosErr.response.data.message;
+        }
+      }
+
+      // Show user-friendly message for existing subscription
+      if (errorMessage.toLowerCase().includes('already has an active subscription')) {
+        const playerName = players.find(p => p.id === selectedPlayer)?.name || 'This player';
+        setError(`${playerName} already has an active subscription for this program.`);
       } else {
         setError(errorMessage);
       }
@@ -178,8 +224,12 @@ export function Checkout() {
                 <h3 className="font-semibold text-velo-black mb-4">Subscription Details</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between">
+                    <span className="text-gray-500">Player</span>
+                    <span className="font-medium text-velo-black">{subscription.playerName}</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-gray-500">Plan</span>
-                    <span className="font-medium text-velo-black">{option?.sessionTypeName} - {option?.name}</span>
+                    <span className="font-medium text-velo-black">{subscription.sessionTypeName} - {subscription.sessionTypeOptionName}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-500">Sessions Available</span>
@@ -238,12 +288,53 @@ export function Checkout() {
         </div>
       )}
 
+      {/* Player Selection */}
+      <Card>
+        <CardContent>
+          <h2 className="text-lg font-semibold text-velo-black mb-4">Select Player</h2>
+          <p className="text-gray-500 text-sm mb-4">Choose which player this subscription is for</p>
+
+          {players.length === 0 ? (
+            <div className="text-center py-6 bg-gray-50 rounded-lg">
+              <p className="text-gray-500 mb-4">You need to create a player profile first</p>
+              <Button variant="secondary" onClick={() => navigate('/players')}>
+                Create Player Profile
+              </Button>
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-3">
+              {players.map((player) => (
+                <button
+                  key={player.id}
+                  onClick={() => setSelectedPlayer(player.id)}
+                  className={`px-4 py-3 rounded-lg font-medium transition-all ${
+                    selectedPlayer === player.id
+                      ? 'bg-gold text-velo-black'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gold/20'
+                  }`}
+                >
+                  {player.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       <Card>
         <CardContent>
           <h2 className="text-lg font-semibold text-velo-black mb-6">Subscription Summary</h2>
 
           {option && (
             <div className="space-y-4">
+              {/* Selected Player */}
+              <div className="flex justify-between py-3 border-b border-gray-100">
+                <span className="text-gray-500">Player</span>
+                <span className="font-medium text-velo-black">
+                  {selectedPlayer ? players.find(p => p.id === selectedPlayer)?.name : 'Not selected'}
+                </span>
+              </div>
+
               {/* Session Type */}
               <div className="flex justify-between py-3 border-b border-gray-100">
                 <span className="text-gray-500">Program</span>
@@ -320,6 +411,7 @@ export function Checkout() {
               variant="secondary"
               onClick={handlePurchase}
               isLoading={step === 'processing'}
+              disabled={!selectedPlayer || players.length === 0}
               className="flex-1"
             >
               {step === 'processing' ? 'Processing...' : 'Confirm Subscription'}

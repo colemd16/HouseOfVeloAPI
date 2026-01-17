@@ -33,17 +33,17 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/me")
+    @GetMapping("/active")
     @PreAuthorize("hasAnyRole('PARENT','PLAYER')")
-    public ResponseEntity<SubscriptionResponse> getMySubscription(Authentication authentication) {
+    public ResponseEntity<List<SubscriptionResponse>> getActiveSubscriptions(Authentication authentication) {
         Long userId = (Long) authentication.getCredentials();
-        SubscriptionResponse response = subscriptionService.getMySubscription(userId);
-        return ResponseEntity.ok(response);
+        List<SubscriptionResponse> subscriptions = subscriptionService.getActiveSubscriptions(userId);
+        return ResponseEntity.ok(subscriptions);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('PARENT', 'PLAYER')")
-    public ResponseEntity<List<SubscriptionResponse>> getMySubscriptions(Authentication authentication){
+    public ResponseEntity<List<SubscriptionResponse>> getMySubscriptions(Authentication authentication) {
         Long userId = (Long) authentication.getCredentials();
         List<SubscriptionResponse> subscriptions = subscriptionService.getMySubscriptions(userId);
         return ResponseEntity.ok(subscriptions);

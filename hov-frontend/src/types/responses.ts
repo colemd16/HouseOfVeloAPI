@@ -154,8 +154,11 @@ export interface PaymentResponse {
 export interface SubscriptionResponse {
     id: number;
     userId: number;
+    playerId: number;
+    playerName: string;
     sessionTypeOptionId: number;
-    squareSubscriptionId: string | null;
+    sessionTypeName: string | null;
+    sessionTypeOptionName: string | null;
     status: SubscriptionStatus;
     currentPeriodStart: string;
     currentPeriodEnd: string;
@@ -163,7 +166,6 @@ export interface SubscriptionResponse {
     tokensRemaining: number;
     autoRenew: boolean;
     createdAt: string;
-    updatedAt: string;
 }
 
 // ============================================

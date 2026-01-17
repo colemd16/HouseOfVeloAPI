@@ -7,18 +7,13 @@ export const subscriptionsApi = {
         return response.data;
     },
 
-    getMy: async (): Promise<SubscriptionResponse[]> => {
-        const response = await apiClient.get<SubscriptionResponse[]>('/subscriptions/me');
-        return response.data;
-    },
-
-    getMyActive: async (): Promise<SubscriptionResponse> => {
-        const response = await apiClient.get<SubscriptionResponse>('/subscriptions/me');
-        return response.data;
-    },
-
     getAll: async (): Promise<SubscriptionResponse[]> => {
         const response = await apiClient.get<SubscriptionResponse[]>('/subscriptions');
+        return response.data;
+    },
+
+    getActive: async (): Promise<SubscriptionResponse[]> => {
+        const response = await apiClient.get<SubscriptionResponse[]>('/subscriptions/active');
         return response.data;
     },
 

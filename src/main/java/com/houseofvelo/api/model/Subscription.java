@@ -20,6 +20,9 @@ public class Subscription {
     @ManyToOne
     private User user;
 
+    @ManyToOne(optional = false)
+    private Player player; // The player this subscription is for
+
     @ManyToOne
     private SessionTypeOption sessionTypeOption;
 
