@@ -45,7 +45,14 @@ public class SubscriptionService {
         Player player = playerRepository.findById(request.getPlayerId())
                 .orElseThrow(() -> new RuntimeException("Player not found: " + request.getPlayerId()));
 
-        if (!player.getUser().getId().equals(userId)) {
+        // Check ownership: player can be owned via parent_id (for kids) or user_id (for independent players)
+        boolean isParentPlayer = playerRepository.findByParentId(userId).stream()
+                .anyMatch(p -> p.getId().equals(request.getPlayerId()));
+        boolean isOwnPlayer = playerRepository.findByUserId(userId)
+                .map(p -> p.getId().equals(request.getPlayerId()))
+                .orElse(false);
+
+        if (!isParentPlayer && !isOwnPlayer) {
             throw new IllegalStateException("Player does not belong to this user");
         }
 
