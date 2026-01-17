@@ -163,3 +163,13 @@ export interface ReceivePaymentRequest {
 export interface RefundRequest {
     reason: string;
 }
+
+// ============================================
+// SUBSCRIPTIONS
+// ============================================
+
+export interface CreateSubscriptionRequest {
+    sessionTypeOptionId: number;
+    tokensPerPeriod: number;
+    autoRenew?: boolean;
+}

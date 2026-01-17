@@ -31,16 +31,30 @@ export function Services() {
     fetchSessionTypes();
   }, []);
 
-  // Handle booking - redirect to bookings page with selected option
-  const handleBookNow = (optionId?: number) => {
-    const bookingPath = optionId ? `/bookings?optionId=${optionId}` : '/bookings';
+  // Handle booking - redirect based on pricing type
+  // Subscriptions go to checkout, one-time options go to bookings
+  const handleBookNow = (option?: SessionTypeOptionResponse | null) => {
+    if (!option) {
+      // No option selected, go to general bookings page
+      if (isAuthenticated) {
+        navigate('/bookings');
+      } else {
+        navigate('/login', { state: { from: { pathname: '/bookings' } } });
+      }
+      handleCloseModal();
+      return;
+    }
+
+    // Determine destination based on pricing type
+    const isSubscription = option.pricingType === PricingType.SUBSCRIPTION;
+    const destinationPath = isSubscription
+      ? `/checkout?optionId=${option.id}`
+      : `/bookings?optionId=${option.id}`;
 
     if (isAuthenticated) {
-      // User is logged in, go directly to bookings
-      navigate(bookingPath);
+      navigate(destinationPath);
     } else {
-      // User needs to login first, pass the intended destination
-      navigate('/login', { state: { from: { pathname: bookingPath } } });
+      navigate('/login', { state: { from: { pathname: destinationPath } } });
     }
 
     // Close modal if open
@@ -223,7 +237,7 @@ export function Services() {
                         Details
                       </button>
                       <button
-                        onClick={() => handleBookNow(lowestPrice?.id)}
+                        onClick={() => handleBookNow(lowestPrice)}
                         className="flex-1 px-4 py-2.5 rounded-lg bg-velo-red text-white font-medium
                           hover:bg-velo-red-dark transition-colors text-center"
                       >
@@ -354,11 +368,11 @@ export function Services() {
                               )}
                             </div>
                             <button
-                              onClick={() => handleBookNow(option.id)}
+                              onClick={() => handleBookNow(option)}
                               className="px-5 py-2 rounded-lg bg-velo-red text-white font-medium text-sm
                                 hover:bg-velo-red-dark transition-colors whitespace-nowrap"
                             >
-                              Select & Book
+                              {option.pricingType === PricingType.SUBSCRIPTION ? 'Subscribe' : 'Select & Book'}
                             </button>
                           </div>
                         </div>

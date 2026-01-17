@@ -253,10 +253,22 @@ export function Bookings() {
     }
   };
 
+  // Helper to format 24-hour time to 12-hour format with AM/PM
+  const formatTime12Hour = (time24: string): string => {
+    const [hours, minutes] = time24.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
+    const hours12 = hours % 12 || 12;
+    return `${hours12}:${minutes.toString().padStart(2, '0')} ${period}`;
+  };
+
   const getAvailableTimeSlots = () => {
     if (!selectedDate || trainerAvailability.length === 0) return [];
 
-    const dayOfWeek = new Date(selectedDate).toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+    // Parse date parts manually to avoid timezone issues
+    // new Date("YYYY-MM-DD") interprets as UTC, causing day shift in local timezones
+    const [year, month, day] = selectedDate.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
     const dayAvailability = trainerAvailability.filter(a => a.dayOfWeek === dayOfWeek);
 
     const slots: string[] = [];
@@ -602,7 +614,7 @@ export function Bookings() {
                             : 'bg-gray-100 text-gray-700 hover:bg-gold/20'
                         }`}
                       >
-                        {time}
+                        {formatTime12Hour(time)}
                       </button>
                     ))}
                   </div>
@@ -703,7 +715,7 @@ export function Bookings() {
               </div>
               <div className="flex justify-between py-3 border-b border-gray-100">
                 <span className="text-gray-500">Time</span>
-                <span className="font-medium text-velo-black">{selectedTime}</span>
+                <span className="font-medium text-velo-black">{formatTime12Hour(selectedTime)}</span>
               </div>
               <div className="flex justify-between py-3 border-b border-gray-100">
                 <span className="text-gray-500">Duration</span>

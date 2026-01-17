@@ -19,6 +19,7 @@ import { Signup } from './pages/Signup';
 import { Dashboard } from './pages/Dashboard';
 import { Players } from './pages/Players';
 import { Bookings } from './pages/Bookings';
+import { Checkout } from './pages/Checkout';
 import { ComingSoon } from './pages/dashboards/ComingSoon';
 
 function App() {
@@ -82,6 +83,18 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <Bookings />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Checkout - Subscription Purchase */}
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Checkout />
             </Layout>
           </ProtectedRoute>
         }
