@@ -4,9 +4,18 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Layout } from './components/Layout';
 import { FullPageSpinner } from './components/ui/Spinner';
 
-// Pages
+// Public Pages
+import { Home } from './pages/public/Home';
+import { About } from './pages/public/About';
+import { Services } from './pages/public/Services';
+import { Velocity518 } from './pages/public/Velocity518';
+import { Contact } from './pages/public/Contact';
+
+// Auth Pages
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
+
+// Protected Pages
 import { Dashboard } from './pages/Dashboard';
 import { Players } from './pages/Players';
 import { Bookings } from './pages/Bookings';
@@ -21,7 +30,14 @@ function App() {
 
   return (
     <Routes>
-      {/* Public routes */}
+      {/* Public Website Pages */}
+      <Route path="/" element={<Home />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/518-velocity" element={<Velocity518 />} />
+      <Route path="/contact" element={<Contact />} />
+
+      {/* Auth routes */}
       <Route
         path="/login"
         element={
@@ -123,14 +139,8 @@ function App() {
         }
       />
 
-      {/* Redirect root to dashboard or login */}
-      <Route
-        path="/"
-        element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />}
-      />
-
-      {/* Catch all - redirect to dashboard */}
-      <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      {/* Catch all - redirect to home */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

@@ -1,3 +1,6 @@
+/* Import Google Fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,10 +8,14 @@
 /* House of Velo - Base Styles */
 :root {
   --gold: #C4A962;
+  --gold-hover: #b39852;
   --red: #B91C1C;
+  --red-hover: #991515;
   --black: #0A0A0A;
+  --dark: #111111;
   --white: #FFFFFF;
   --gray: #333;
+  --gray-light: #1a1a1a;
   --light-gray: #f5f5f5;
 }
 
@@ -18,15 +25,67 @@
   box-sizing: border-box;
 }
 
-body {
-  font-family: 'Arial', sans-serif;
-  color: var(--gray);
-  line-height: 1.6;
-  background: var(--white);
-  min-height: 100vh;
+html {
+  background-color: #0A0A0A;
 }
 
-/* Custom scrollbar */
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  background-color: #0A0A0A;
+  /* Handle iOS safe areas */
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Ensure root element also has black background */
+#root {
+  min-height: 100vh;
+  background-color: #0A0A0A;
+}
+
+/* Display Font for Athletic Headlines */
+.font-display {
+  font-family: 'Oswald', Impact, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Gold Gradient Text */
+.text-gradient-gold {
+  background: linear-gradient(135deg, #C4A962 0%, #e8d9a8 50%, #C4A962 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom scrollbar - Dark variant for public site */
+.dark-scrollbar::-webkit-scrollbar,
+.public-site ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-track,
+.public-site ::-webkit-scrollbar-track {
+  background: var(--dark);
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb,
+.public-site ::-webkit-scrollbar-thumb {
+  background: var(--gold);
+  border-radius: 4px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover,
+.public-site ::-webkit-scrollbar-thumb:hover {
+  background: var(--gold-hover);
+}
+
+/* Default scrollbar for dashboard */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -42,7 +101,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b39852;
+  background: var(--gold-hover);
 }
 
 /* Form input styles to prevent iOS zoom */
@@ -54,7 +113,112 @@ body {
   }
 }
 
-/* Utility classes */
+/* ============================================
+   PUBLIC SITE STYLES (Bold Athletic Theme)
+   ============================================ */
+
+/* Section styling for public site */
+.section-dark {
+  @apply bg-velo-black py-20 md:py-28;
+}
+
+.section-darker {
+  @apply bg-velo-dark py-20 md:py-28;
+}
+
+.container-public {
+  @apply max-w-7xl mx-auto px-4 md:px-8;
+}
+
+/* Typography for public site */
+.heading-hero {
+  @apply text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white tracking-tight leading-none;
+}
+
+.heading-section {
+  @apply text-3xl md:text-5xl font-display font-bold text-white tracking-tight;
+}
+
+.heading-subsection {
+  @apply text-2xl md:text-3xl font-display font-semibold text-white;
+}
+
+.text-body {
+  @apply text-gray-300 text-lg leading-relaxed;
+}
+
+.text-body-sm {
+  @apply text-gray-400 text-base leading-relaxed;
+}
+
+/* Card styling for public site */
+.card-dark {
+  @apply bg-velo-gray-light border border-gray-800 rounded-2xl p-6 md:p-8;
+  @apply transition-all duration-300;
+}
+
+.card-dark:hover {
+  @apply border-gold/50 shadow-gold-glow -translate-y-2;
+}
+
+/* Button variants for public site */
+.btn-gold {
+  @apply bg-gold text-velo-black font-semibold px-6 py-3 rounded-lg;
+  @apply transition-all duration-300;
+  @apply hover:bg-gold-hover hover:shadow-gold-glow hover:-translate-y-1;
+}
+
+.btn-red {
+  @apply bg-velo-red text-white font-semibold px-6 py-3 rounded-lg;
+  @apply transition-all duration-300;
+  @apply hover:bg-velo-red-hover hover:shadow-red-glow hover:-translate-y-1;
+}
+
+.btn-outline-gold {
+  @apply border-2 border-gold text-gold font-semibold px-6 py-3 rounded-lg;
+  @apply transition-all duration-300 bg-transparent;
+  @apply hover:bg-gold hover:text-velo-black;
+}
+
+.btn-outline-white {
+  @apply border-2 border-white text-white font-semibold px-6 py-3 rounded-lg;
+  @apply transition-all duration-300 bg-transparent;
+  @apply hover:bg-white hover:text-velo-black;
+}
+
+/* Video background container */
+.video-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.video-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+  object-fit: cover;
+}
+
+/* Hero overlay gradient */
+.hero-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(10, 10, 10, 0.5) 0%,
+    rgba(10, 10, 10, 0.7) 50%,
+    rgba(10, 10, 10, 0.95) 100%
+  );
+}
+
+/* ============================================
+   DASHBOARD STYLES (Light Theme - preserved)
+   ============================================ */
+
 @layer components {
   .btn {
     @apply px-6 py-3 rounded-md cursor-pointer text-base font-medium transition-all duration-300 inline-block;
@@ -86,5 +250,16 @@ body {
 
   .label {
     @apply block mb-2 font-semibold text-velo-gray;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

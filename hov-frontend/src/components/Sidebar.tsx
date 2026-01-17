@@ -53,7 +53,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         <div className="p-6 border-b border-gray-800">
           <NavLink to="/dashboard" onClick={onClose}>
             <img
-              src="/images/mv.png"
+              src="/images/houseofvelo.png"
               alt="House of Velo"
               className="h-16 w-auto mx-auto"
             />

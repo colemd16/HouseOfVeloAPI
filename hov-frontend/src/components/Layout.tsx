@@ -39,7 +39,7 @@ export function Layout({ children }: LayoutProps) {
             </svg>
           </button>
           <img
-            src="/images/mv.png"
+            src="/images/houseofvelo.png"
             alt="House of Velo"
             className="h-10 w-auto"
           />

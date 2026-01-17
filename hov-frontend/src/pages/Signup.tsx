@@ -119,7 +119,7 @@ export function Signup() {
         {/* Logo */}
         <div className="text-center mb-8">
           <img
-            src="/images/mv.png"
+            src="/images/houseofvelo.png"
             alt="House of Velo"
             className="h-24 w-auto mx-auto mb-4"
           />

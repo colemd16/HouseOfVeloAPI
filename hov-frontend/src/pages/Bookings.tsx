@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Card, CardContent } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -30,9 +31,14 @@ const statusColors: Record<string, string> = {
 
 export function Bookings() {
   const { hasRole } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [bookings, setBookings] = useState<BookingResponse[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [initialOptionId] = useState(() => {
+    const optionId = searchParams.get('optionId');
+    return optionId ? parseInt(optionId, 10) : null;
+  });
 
   // Booking flow state
   const [step, setStep] = useState<BookingStep>('list');
@@ -65,6 +71,46 @@ export function Bookings() {
     fetchBookings();
   }, []);
 
+  // Auto-start booking flow if optionId is provided in URL
+  useEffect(() => {
+    if (initialOptionId && !isLoading) {
+      startBookingWithOption(initialOptionId);
+      // Clear the URL param after processing
+      setSearchParams({}, { replace: true });
+    }
+  }, [initialOptionId, isLoading]);
+
+  const startBookingWithOption = async (optionId: number) => {
+    setStep('session');
+    try {
+      const [types, playerList] = await Promise.all([
+        sessionTypesApi.getAll(),
+        hasRole(Role.PARENT) ? playersApi.getMyPlayers() : Promise.resolve([]),
+      ]);
+      const activeTypes = types.filter(t => t.isActive);
+      const enrichedTypes = await enrichSessionTypesWithOptions(activeTypes);
+      setSessionTypes(enrichedTypes);
+      setPlayers(playerList);
+
+      // Find the session type and option that matches the optionId
+      for (const sessionType of enrichedTypes) {
+        if (sessionType.options) {
+          const option = sessionType.options.find(o => o.id === optionId && o.isActive);
+          if (option) {
+            // Auto-select this option and move to trainer selection
+            selectSessionOption(sessionType, option);
+            return;
+          }
+        }
+      }
+      // If option not found, just stay on session selection
+    } catch (err) {
+      console.error('Failed to load session types:', err);
+      setError('Failed to load session types');
+      setStep('list');
+    }
+  };
+
   const fetchBookings = async () => {
     try {
       const data = await bookingsApi.getMyBookings();
@@ -79,6 +125,27 @@ export function Bookings() {
     }
   };
 
+  // Helper to fetch options for session types that don't have them
+  const enrichSessionTypesWithOptions = async (types: SessionTypeResponse[]): Promise<SessionTypeResponse[]> => {
+    const enrichedTypes = await Promise.all(
+      types.map(async (type) => {
+        // If options are already loaded, use them
+        if (type.options && type.options.length > 0) {
+          return type;
+        }
+        // Otherwise fetch options separately
+        try {
+          const options = await sessionTypesApi.getOptions(type.id);
+          return { ...type, options };
+        } catch (err) {
+          console.error(`Failed to fetch options for session type ${type.id}:`, err);
+          return { ...type, options: [] };
+        }
+      })
+    );
+    return enrichedTypes;
+  };
+
   const startBooking = async () => {
     setStep('session');
     try {
@@ -86,7 +153,9 @@ export function Bookings() {
         sessionTypesApi.getAll(),
         hasRole(Role.PARENT) ? playersApi.getMyPlayers() : Promise.resolve([]),
       ]);
-      setSessionTypes(types.filter(t => t.isActive));
+      const activeTypes = types.filter(t => t.isActive);
+      const enrichedTypes = await enrichSessionTypesWithOptions(activeTypes);
+      setSessionTypes(enrichedTypes);
       setPlayers(playerList);
     } catch (err) {
       console.error('Failed to load session types:', err);

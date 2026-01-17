@@ -21,9 +21,10 @@ spring:
     secret: ${JWT_SECRET}
     expiration: ${JWT_EXPIRATION:86400000}
 
-  server:
-    port: ${SERVER_PORT:8080}
+server:
+  port: ${SERVER_PORT:8080}
+  address: 0.0.0.0
 
-  logging:
-    level:
-      com.houseofvelo.api: ${LOG_LEVEL:INFO}
+logging:
+  level:
+    com.houseofvelo.api: ${LOG_LEVEL:INFO}
