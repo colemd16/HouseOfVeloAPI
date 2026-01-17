@@ -33,7 +33,7 @@ public class SubscriptionService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + userId));
 
-        SessionTypeOption sessionTypeOption = sessionTypeOptionRepository.findById(userId)
+        SessionTypeOption sessionTypeOption = sessionTypeOptionRepository.findById(request.getSessionTypeOptionId())
                 .orElseThrow(() -> new RuntimeException("Session type option not found: " + request.getSessionTypeOptionId()));
 
 
